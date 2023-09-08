@@ -68,7 +68,7 @@ func (pc *playerController) callInventoryMenu() {
 	menu.AddMenuItem("Weapon", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotWeapon), true))
 	menu.AddMenuItem("Armor", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotBody), true))
 	menu.AddMenuItem("Helmet", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotHelmet), true))
-	menu.AddMenuItem("Amulet", []string{"Nothing"})
+	menu.AddMenuItem("Amulet", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotAmulet), true))
 	selected := menu.Call(cw)
 	switch selected {
 	case -1:
@@ -81,6 +81,8 @@ func (pc *playerController) callInventoryMenu() {
 		pc.callChangeItemMenu(invSlotBody)
 	case 3:
 		pc.callChangeItemMenu(invSlotHelmet)
+	case 4:
+		pc.callChangeItemMenu(invSlotAmulet)
 	}
 }
 
@@ -126,6 +128,10 @@ func (pc *playerController) callChangeItemMenu(slot uint8) {
 		title = "Select headpiece to put on"
 		undertitles = append(undertitles, pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotHelmet), true)...)
 		filter = func(i *item) bool { return i.isArmor() && i.asArmor.Slot == static.ArmorSlotHead }
+	case invSlotAmulet:
+		title = "Select amulet to wear"
+		undertitles = append(undertitles, pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotAmulet), true)...)
+		filter = func(i *item) bool { return i.isAmulet() }
 	default:
 		panic("Unimplemented")
 	}

@@ -48,6 +48,11 @@ func selectRandomAppropriateAffixFor(stats ItemStatsInterface) *affixAdder {
 					return 0
 				}
 				return 1
+			case *AmuletStats:
+				if currAff.anyFunc == nil {
+					return 0
+				}
+				return 1
 			default:
 				panic("Type check error")
 			}

@@ -9,6 +9,7 @@ const (
 	invSlotWeapon uint8 = iota
 	invSlotBody
 	invSlotHelmet
+	invSlotAmulet
 	invSlotsTotal
 )
 

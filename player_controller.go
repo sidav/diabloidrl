@@ -58,6 +58,8 @@ func (pc *playerController) defaultMode(dung *dungeon) {
 		}
 	case "TAB":
 		pc.mode = pcModeAutoattack
+	default:
+		log.AppendMessagef("Key '%s' does nothing.", key)
 	}
 }
 
