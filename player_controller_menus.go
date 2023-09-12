@@ -66,9 +66,10 @@ func (pc *playerController) callInventoryMenu() {
 	menu := tcell_console_wrapper.DescriptionHeavySelectMenu{Title: "Inventory"}
 	menu.AddMenuItem("See the backpack", []string{fmt.Sprintf("%d items inside", len(player.inv.stash)), ""})
 	menu.AddMenuItem("Weapon", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotWeapon), true))
-	menu.AddMenuItem("Armor", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotBody), true))
+	menu.AddMenuItem("Body armor", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotBody), true))
 	menu.AddMenuItem("Helmet", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotHelmet), true))
 	menu.AddMenuItem("Amulet", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotAmulet), true))
+	menu.AddMenuItem("Flask", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotFlask), true))
 	selected := menu.Call(cw)
 	switch selected {
 	case -1:
@@ -83,6 +84,8 @@ func (pc *playerController) callInventoryMenu() {
 		pc.callChangeItemMenu(invSlotHelmet)
 	case 4:
 		pc.callChangeItemMenu(invSlotAmulet)
+	case 5:
+		pc.callChangeItemMenu(invSlotFlask)
 	}
 }
 
@@ -114,24 +117,24 @@ func (pc *playerController) callBackpackMenu() {
 func (pc *playerController) callChangeItemMenu(slot uint8) {
 	var title string
 	undertitles := []string{"Current: "}
+	undertitles = append(undertitles, pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(slot), true)...)
 	var filter func(*item) bool
 	switch slot {
 	case invSlotWeapon:
 		title = "Select weapon to wield"
-		undertitles = append(undertitles, pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotWeapon), true)...)
 		filter = func(i *item) bool { return i.isWeapon() }
 	case invSlotBody:
 		title = "Select armor to wear"
-		undertitles = append(undertitles, pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotBody), true)...)
 		filter = func(i *item) bool { return i.isArmor() && i.asArmor.Slot == static.ArmorSlotBody }
 	case invSlotHelmet:
 		title = "Select headpiece to put on"
-		undertitles = append(undertitles, pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotHelmet), true)...)
 		filter = func(i *item) bool { return i.isArmor() && i.asArmor.Slot == static.ArmorSlotHead }
 	case invSlotAmulet:
 		title = "Select amulet to wear"
-		undertitles = append(undertitles, pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotAmulet), true)...)
 		filter = func(i *item) bool { return i.isAmulet() }
+	case invSlotFlask:
+		title = "Select flask to ready"
+		filter = func(i *item) bool { return i.isFlask() }
 	default:
 		panic("Unimplemented")
 	}

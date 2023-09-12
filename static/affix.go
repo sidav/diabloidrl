@@ -12,6 +12,10 @@ type affixAdder struct {
 	// for weapons:
 	weaponFunc            func(*WeaponStats)
 	meleeOnly, rangedOnly bool
+	// for amulets:
+	// TODO
+	// for flasks:
+	flaskFunc func(*FlaskStats)
 	// universal:
 	anyFunc func(ItemStatsInterface)
 	// TODO (add item stats interface)

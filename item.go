@@ -11,6 +11,7 @@ type item struct {
 	asWeapon *static.WeaponStats
 	asArmor  *static.ArmorStats
 	asAmulet *static.AmuletStats
+	asFlask  *static.FlaskStats
 }
 
 func (i *item) isWeapon() bool {
@@ -25,6 +26,10 @@ func (i *item) isAmulet() bool {
 	return i.asAmulet != nil
 }
 
+func (i *item) isFlask() bool {
+	return i.asFlask != nil
+}
+
 func (i *item) getRarity() int {
 	if i.isWeapon() {
 		return i.asWeapon.Rarity
@@ -34,6 +39,9 @@ func (i *item) getRarity() int {
 	}
 	if i.isAmulet() {
 		return i.asAmulet.Rarity
+	}
+	if i.isFlask() {
+		return i.asFlask.Rarity
 	}
 	panic("No rarity")
 }
@@ -54,6 +62,9 @@ func (i *item) getAscii() rune {
 	if i.isAmulet() {
 		return '"'
 	}
+	if i.isFlask() {
+		return '!'
+	}
 	return '?'
 }
 
@@ -67,6 +78,9 @@ func (i *item) initAsRandomItem(minRarity int) {
 		},
 		func() {
 			i.asAmulet = static.GenerateRandomAmuletStats(minRarity)
+		},
+		func() {
+			i.asFlask = static.GenerateRandomFlaskStats(minRarity)
 		},
 	}
 	itype := rnd.Rand(len(itemGenerators))
@@ -87,6 +101,9 @@ func (i *item) getStatic() static.ItemStatsInterface {
 	if i.isAmulet() {
 		return i.asAmulet
 	}
+	if i.isFlask() {
+		return i.asFlask
+	}
 	panic("Item static retrieval failure")
 }
 
@@ -96,7 +113,7 @@ func (i *item) getDescription() string {
 	// }
 	if i.isWeapon() {
 		return fmt.Sprintf(
-			"To-Hit %s, Damage %d-%d Delay %d",
+			"To-Hit %s, Damage %d-%d, Delay %d",
 			i.asWeapon.ToHitDice.GetShortDescriptionString(),
 			i.asWeapon.DamageDice.GetMinimumPossible(), i.asWeapon.DamageDice.GetMaximumPossible(),
 			i.asWeapon.Delay,
@@ -111,6 +128,14 @@ func (i *item) getDescription() string {
 	}
 	if i.isAmulet() {
 		return "Amulet"
+	}
+	if i.isFlask() {
+		return fmt.Sprintf(
+			"Flask: max %d uses, heals %d HP, use cooldown %d",
+			i.asFlask.NumberOfSips,
+			i.asFlask.EachSipHeals,
+			i.asFlask.CooldownBetweenSips,
+		)
 	}
 	return "Undefined item"
 }

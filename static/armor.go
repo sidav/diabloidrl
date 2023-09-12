@@ -106,7 +106,7 @@ var sTableArmors = []*ArmorStats{
 		Name:               "Cap",
 		Slot:               ArmorSlotHead,
 		Defense:            1,
-		EvasionModifier:    1,
+		EvasionModifier:    0,
 		weightForSelection: 1,
 	},
 	{
@@ -114,6 +114,13 @@ var sTableArmors = []*ArmorStats{
 		Slot:               ArmorSlotHead,
 		Defense:            2,
 		EvasionModifier:    -1,
+		weightForSelection: 1,
+	},
+	{
+		Name:               "Hood",
+		Slot:               ArmorSlotHead,
+		Defense:            0,
+		EvasionModifier:    1,
 		weightForSelection: 1,
 	},
 	{
