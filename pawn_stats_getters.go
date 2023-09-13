@@ -128,7 +128,7 @@ func (p *pawn) getAttackRange() int {
 
 func (p *pawn) getMaxFlaskCharges() int {
 	if p.inv.getItemInSlot(invSlotFlask) != nil {
-		return p.inv.getItemInSlot(invSlotFlask).asFlask.NumberOfSips
+		return p.inv.getItemInSlot(invSlotFlask).asFlask.MaxCharges
 	}
 	return 0
 }

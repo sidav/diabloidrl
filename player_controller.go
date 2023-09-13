@@ -40,7 +40,7 @@ func (pc *playerController) defaultMode(dung *dungeon) {
 		return
 	}
 	switch key {
-	case "ESCAPE":
+	case "EXIT": // ctrl+c
 		stopGame = true
 	case "s":
 		player.spendTime(player.getMovementTime())

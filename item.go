@@ -130,11 +130,15 @@ func (i *item) getDescription() string {
 		return "Amulet"
 	}
 	if i.isFlask() {
+		f := i.asFlask
+		totalHpHealed := f.HealStrength * (f.HealEffectDuration / f.HealTicksPeriod)
 		return fmt.Sprintf(
-			"Flask: max %d uses, heals %d HP, use cooldown %d",
-			i.asFlask.NumberOfSips,
-			i.asFlask.EachSipHeals,
-			i.asFlask.CooldownBetweenSips,
+			"+%d HP each %d ticks (+%d HP total), %d uses, cooldown %d",
+			f.HealStrength,
+			f.HealTicksPeriod,
+			totalHpHealed,
+			f.MaxCharges,
+			f.CooldownBetweenSips,
 		)
 	}
 	return "Undefined item"

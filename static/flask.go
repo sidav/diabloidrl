@@ -8,10 +8,12 @@ import (
 type FlaskStats struct {
 	Name string
 
-	EachSipHeals        int
-	NumberOfSips        int
+	HealStrength       int
+	HealTicksPeriod    int
+	HealEffectDuration int
+
 	CooldownBetweenSips int
-	// SipRechargesIn      int
+	MaxCharges          int
 
 	Rarity int
 
@@ -97,31 +99,37 @@ func getRandomFlaskStats(rnd random.PRNG) *FlaskStats {
 }
 
 var sTableFlasks = []*FlaskStats{
-	// heals much
+	// balanced
 	{
 		Name:                "Flask",
-		NumberOfSips:        2,
-		CooldownBetweenSips: 2000,
-		EachSipHeals:        7,
-		// SipRechargesIn:      10000,
+		MaxCharges:          2,
+		CooldownBetweenSips: 1000,
+		HealStrength:        1,
+		HealTicksPeriod:     10,
+		HealEffectDuration:  100,
+
 		weightForSelection: 1,
 	},
-	// short cooldown
+	// heals fast, short cooldown
 	{
 		Name:                "Vial",
-		NumberOfSips:        3,
+		MaxCharges:          3,
 		CooldownBetweenSips: 500,
-		EachSipHeals:        10,
-		// SipRechargesIn:      10000,
+		HealStrength:        1,
+		HealTicksPeriod:     8,
+		HealEffectDuration:  50,
+
 		weightForSelection: 1,
 	},
-	// many charges
+	// heals slowly, many charges
 	{
 		Name:                "Bottle",
-		NumberOfSips:        5,
+		MaxCharges:          5,
 		CooldownBetweenSips: 1000,
-		EachSipHeals:        5,
-		// SipRechargesIn:      10000,
+		HealStrength:        2,
+		HealTicksPeriod:     25,
+		HealEffectDuration:  200,
+
 		weightForSelection: 1,
 	},
 }

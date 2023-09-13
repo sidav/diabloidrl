@@ -14,6 +14,9 @@ func game(d *dungeon, pc *playerController) {
 			if p.canUseFlaskInTicks > 0 {
 				p.canUseFlaskInTicks--
 			}
+			p.cleanupStatusEffects()
+			d.applyPassiveStatusEffects(p)
+
 			if p.canActInTicks > 0 {
 				p.canActInTicks--
 			} else if !p.isPlayer() {

@@ -153,9 +153,18 @@ var allAffixes = []*affixAdder{
 		affixAdjective:                   "Diluted",
 		incompatibleWithAffixOfAdjective: "potent",
 		flaskFunc: func(stats *FlaskStats) {
-			mod := rnd.RandInRange(1, 3)
-			stats.EachSipHeals -= mod
-			stats.addAffixDescription("Heals %d HP less", mod)
+			perc := rnd.RandInRange(25, 100)
+			stats.HealTicksPeriod = intPercentage(stats.HealTicksPeriod, 100+perc)
+			stats.addAffixDescription("%d%% slower healing", perc)
+		},
+	},
+	{
+		affixAdjective:                   "Weak",
+		incompatibleWithAffixOfAdjective: "Strong",
+		flaskFunc: func(stats *FlaskStats) {
+			perc := rnd.RandInRange(25, 50)
+			stats.HealEffectDuration = intPercentage(stats.HealEffectDuration, 100-perc)
+			stats.addAffixDescription("Healing lasts %d%% shorter", perc)
 		},
 	},
 	{
@@ -172,20 +181,37 @@ var allAffixes = []*affixAdder{
 		incompatibleWithAffixOfAdjective: "Bigger",
 		flaskFunc: func(stats *FlaskStats) {
 			mod := rnd.RandInRange(1, 3)
-			if stats.NumberOfSips-mod <= 0 {
-				mod = stats.NumberOfSips - 1
+			if stats.MaxCharges-mod <= 0 {
+				mod = stats.MaxCharges - 1
 			}
-			stats.NumberOfSips -= mod
+			stats.MaxCharges -= mod
 			stats.addAffixDescription("-%d charges", mod)
 		},
 	},
 	// good
 	{
+		affixAdjective: "melding",
+		affixName:      "Melding",
+		flaskFunc: func(stats *FlaskStats) {
+			mod := rnd.RandInRange(1, 2)
+			stats.HealStrength += mod
+			stats.addAffixDescription("+%d healing effectiveness", mod)
+		},
+	},
+	{
 		affixAdjective: "Potent",
 		flaskFunc: func(stats *FlaskStats) {
-			mod := rnd.RandInRange(1, 10)
-			stats.EachSipHeals += mod
-			stats.addAffixDescription("Heals %d HP more", mod)
+			perc := rnd.RandInRange(25, 50)
+			stats.HealTicksPeriod = intPercentage(stats.HealTicksPeriod, 100-perc)
+			stats.addAffixDescription("%d%% faster healing", perc)
+		},
+	},
+	{
+		affixAdjective: "Strong",
+		flaskFunc: func(stats *FlaskStats) {
+			perc := rnd.RandInRange(25, 50)
+			stats.HealEffectDuration = intPercentage(stats.HealEffectDuration, 100+perc)
+			stats.addAffixDescription("Healing lasts %d%% longer", perc)
 		},
 	},
 	{
@@ -200,7 +226,7 @@ var allAffixes = []*affixAdder{
 		affixAdjective: "Bigger",
 		flaskFunc: func(stats *FlaskStats) {
 			mod := rnd.RandInRange(1, 5)
-			stats.NumberOfSips += mod
+			stats.MaxCharges += mod
 			stats.addAffixDescription("+%d charges", mod)
 		},
 	},

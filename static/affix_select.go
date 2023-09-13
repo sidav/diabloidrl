@@ -57,7 +57,10 @@ func selectRandomAppropriateAffixFor(stats ItemStatsInterface) *affixAdder {
 				if currAff.flaskFunc == nil && currAff.anyFunc == nil {
 					return 0
 				}
-				return 1
+				if currAff.flaskFunc != nil {
+					return 3
+				}
+				return 2
 			default:
 				panic("Type check error")
 			}

@@ -1,5 +1,7 @@
 package main
 
+import "diabloidrl/static"
+
 func (p *pawn) regainHitpoints(hp int) {
 	p.hitpoints += hp
 	if p.hitpoints > p.getMaxHitpoints() {
@@ -36,7 +38,12 @@ func (p *pawn) useFlask() {
 	if flask == nil {
 		return
 	}
-	p.regainHitpoints(flask.asFlask.EachSipHeals)
+	p.receiveStatusEffect(&statusEffect{
+		code:              static.StatusEffectCodeHealing,
+		strength:          flask.asFlask.HealStrength,
+		triggersEachTicks: flask.asFlask.HealTicksPeriod,
+		remainingDuration: flask.asFlask.HealEffectDuration,
+	})
 	p.flaskCharges--
 	p.canUseFlaskInTicks += flask.asFlask.CooldownBetweenSips
 	p.spendTime(10)

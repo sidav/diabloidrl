@@ -7,6 +7,7 @@ type pawn struct {
 	playerStats   *playerStruct
 	inv           *inventory
 	canActInTicks int
+	statusEffects []*statusEffect
 
 	flaskCharges       int
 	canUseFlaskInTicks int
