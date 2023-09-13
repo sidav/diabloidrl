@@ -14,6 +14,15 @@ func (r *rendererStruct) renderUI(dung *dungeon) {
 	}
 	cw.ResetStyle()
 	cw.PutStringf(sphereW, uiTopYCoord, "T: %d (%d)", dung.currentTick, player.playerStats.lastActionTicks)
+	if player.inv.getItemInSlot(invSlotFlask) != nil {
+		if player.canUseFlaskInTicks == 0 {
+			cw.PutStringf(sphereW, uiTopYCoord, "Q: use flask (%d/%d charges)", player.flaskCharges, player.getMaxFlaskCharges())
+		} else {
+			cw.SetStyle(tcell.ColorDarkGray, tcell.ColorBlack)
+			cw.PutStringf(sphereW, uiTopYCoord, "Flask (%d/%d charges) on cooldown: %d",
+				player.flaskCharges, player.getMaxFlaskCharges(), player.canUseFlaskInTicks)
+		}
+	}
 	// hp sphere
 	cw.SetStyle(tcell.ColorDarkRed, tcell.ColorBlack)
 	cw.DrawPartiallyFilledEllipse(0, uiTopYCoord, sphereW, r.uiH, player.hitpoints, player.getMaxHitpoints(), '.', '#')

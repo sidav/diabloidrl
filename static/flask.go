@@ -97,26 +97,29 @@ func getRandomFlaskStats(rnd random.PRNG) *FlaskStats {
 }
 
 var sTableFlasks = []*FlaskStats{
+	// heals much
 	{
 		Name:                "Flask",
 		NumberOfSips:        2,
-		CooldownBetweenSips: 100,
+		CooldownBetweenSips: 2000,
 		EachSipHeals:        7,
 		// SipRechargesIn:      10000,
 		weightForSelection: 1,
 	},
+	// short cooldown
 	{
 		Name:                "Vial",
-		NumberOfSips:        1,
-		CooldownBetweenSips: 50,
+		NumberOfSips:        3,
+		CooldownBetweenSips: 500,
 		EachSipHeals:        10,
 		// SipRechargesIn:      10000,
 		weightForSelection: 1,
 	},
+	// many charges
 	{
 		Name:                "Bottle",
-		NumberOfSips:        3,
-		CooldownBetweenSips: 200,
+		NumberOfSips:        5,
+		CooldownBetweenSips: 1000,
 		EachSipHeals:        5,
 		// SipRechargesIn:      10000,
 		weightForSelection: 1,

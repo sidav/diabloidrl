@@ -147,6 +147,64 @@ var allAffixes = []*affixAdder{
 		},
 	},
 
+	// Flask affixes
+	// bad
+	{
+		affixAdjective:                   "Diluted",
+		incompatibleWithAffixOfAdjective: "potent",
+		flaskFunc: func(stats *FlaskStats) {
+			mod := rnd.RandInRange(1, 3)
+			stats.EachSipHeals -= mod
+			stats.addAffixDescription("Heals %d HP less", mod)
+		},
+	},
+	{
+		affixAdjective:                   "Bitter",
+		incompatibleWithAffixOfAdjective: "tasty",
+		flaskFunc: func(stats *FlaskStats) {
+			perc := rnd.RandInRange(25, 100)
+			stats.CooldownBetweenSips = intPercentage(stats.CooldownBetweenSips, 100+perc)
+			stats.addAffixDescription("%d%% longer cooldown", perc)
+		},
+	},
+	{
+		affixAdjective:                   "Tiny",
+		incompatibleWithAffixOfAdjective: "Bigger",
+		flaskFunc: func(stats *FlaskStats) {
+			mod := rnd.RandInRange(1, 3)
+			if stats.NumberOfSips-mod <= 0 {
+				mod = stats.NumberOfSips - 1
+			}
+			stats.NumberOfSips -= mod
+			stats.addAffixDescription("-%d charges", mod)
+		},
+	},
+	// good
+	{
+		affixAdjective: "Potent",
+		flaskFunc: func(stats *FlaskStats) {
+			mod := rnd.RandInRange(1, 10)
+			stats.EachSipHeals += mod
+			stats.addAffixDescription("Heals %d HP more", mod)
+		},
+	},
+	{
+		affixAdjective: "Tasty",
+		flaskFunc: func(stats *FlaskStats) {
+			perc := rnd.RandInRange(10, 25)
+			stats.CooldownBetweenSips = intPercentage(stats.CooldownBetweenSips, 100-perc)
+			stats.addAffixDescription("%d%% shorter cooldown", perc)
+		},
+	},
+	{
+		affixAdjective: "Bigger",
+		flaskFunc: func(stats *FlaskStats) {
+			mod := rnd.RandInRange(1, 5)
+			stats.NumberOfSips += mod
+			stats.addAffixDescription("+%d charges", mod)
+		},
+	},
+
 	// Universal affixes
 	// Bad
 	{

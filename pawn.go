@@ -7,17 +7,9 @@ type pawn struct {
 	playerStats   *playerStruct
 	inv           *inventory
 	canActInTicks int
-}
 
-func (p *pawn) acquireExperience(exp int) {
-	if p.isPlayer() {
-		levelBefore := p.playerStats.getExperienceLevel()
-		p.playerStats.experience += exp
-		if p.playerStats.getExperienceLevel() > levelBefore {
-			p.playerStats.skillPoints++
-			p.hitpoints = p.getMaxHitpoints()
-		}
-	}
+	flaskCharges       int
+	canUseFlaskInTicks int
 }
 
 func (p *pawn) getCoords() (int, int) {
@@ -26,11 +18,4 @@ func (p *pawn) getCoords() (int, int) {
 
 func (p *pawn) isPlayer() bool {
 	return p.playerStats != nil
-}
-
-func (p *pawn) spendTime(ticks int) {
-	if p.isPlayer() {
-		p.playerStats.lastActionTicks += ticks
-	}
-	p.canActInTicks += ticks
 }

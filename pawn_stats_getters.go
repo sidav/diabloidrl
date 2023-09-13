@@ -126,6 +126,13 @@ func (p *pawn) getAttackRange() int {
 	return p.mob.stats.AttackRange
 }
 
+func (p *pawn) getMaxFlaskCharges() int {
+	if p.inv.getItemInSlot(invSlotFlask) != nil {
+		return p.inv.getItemInSlot(invSlotFlask).asFlask.NumberOfSips
+	}
+	return 0
+}
+
 func (p *pawn) getCriticalChancePercent() int {
 	perc := 5
 	if p.isPlayer() {

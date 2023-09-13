@@ -56,6 +56,13 @@ func (pc *playerController) defaultMode(dung *dungeon) {
 		} else {
 			pc.showPlayerStats()
 		}
+	case "Q":
+		if player.canUseFlaskInTicks == 0 { // player.flaskCharges > 0 {
+			player.useFlask()
+			log.AppendMessagef("You sip healing liquid.")
+		} else {
+			log.AppendMessagef("You can't drink yet!")
+		}
 	case "TAB":
 		pc.mode = pcModeAutoattack
 	default:
