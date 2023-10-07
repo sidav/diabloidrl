@@ -9,6 +9,8 @@ var rnd random.PRNG
 type Generator struct {
 	Tiles       [][]tile
 	MinRoomSide int
+
+	lastRoomId int
 }
 
 func (g *Generator) Init() {
@@ -16,6 +18,7 @@ func (g *Generator) Init() {
 }
 
 func (g *Generator) Generate(w, h int, r random.PRNG) {
+	g.lastRoomId = 0
 	rnd = r
 	g.Tiles = make([][]tile, w)
 	for i := range g.Tiles {

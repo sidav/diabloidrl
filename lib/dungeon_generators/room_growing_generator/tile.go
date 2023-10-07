@@ -13,6 +13,7 @@ const (
 
 type tile struct {
 	Code      tileCode
+	roomId    int
 	Connected bool // for interconnectedness check
 }
 
