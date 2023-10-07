@@ -1,10 +1,13 @@
 package main
 
 import (
+	roomgrowinggenerator "diabloidrl/lib/dungeon_generators/room_growing_generator"
 	"fmt"
-	"github.com/kr/pretty"
 	"math"
 	"strings"
+
+	"github.com/gdamore/tcell/v2"
+	"github.com/kr/pretty"
 )
 
 func calculateLevels() {
@@ -114,5 +117,42 @@ func putGraphFromArray(arr []int, sum int) {
 	for i, val := range arr {
 		length := (lenMax*val + biggest/2) / biggest
 		fmt.Printf(fmt.Sprintf("%d: %s\n", i, strings.Repeat("#", length)))
+	}
+}
+
+func testGen() {
+	gen := roomgrowinggenerator.Generator{
+		MinRoomSide: 4,
+	}
+	gen.Init()
+	key := ""
+	for key != "ESCAPE" {
+		gen.Generate(80, 40, rnd)
+		cw.ClearScreen()
+		for x := range gen.Tiles {
+			for y := range gen.Tiles[x] {
+				rune := '?'
+				switch gen.Tiles[x][y].Code {
+				case roomgrowinggenerator.TILE_UNFILLED:
+					cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
+					rune = '.'
+				case roomgrowinggenerator.TILE_FLOOR:
+					cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
+					rune = ' '
+				case roomgrowinggenerator.TILE_DOOR:
+					cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
+					rune = '+'
+				case roomgrowinggenerator.TILE_WALL:
+					cw.SetStyle(tcell.ColorBlack, tcell.ColorDarkRed)
+					rune = '#'
+				}
+				if !gen.Tiles[x][y].Connected && gen.Tiles[x][y].Code != roomgrowinggenerator.TILE_UNFILLED {
+					cw.InverseStyle()
+				}
+				cw.PutChar(rune, x, y)
+			}
+		}
+		cw.FlushScreen()
+		key = cw.ReadKey()
 	}
 }
