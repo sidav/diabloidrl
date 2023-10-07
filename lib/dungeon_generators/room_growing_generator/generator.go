@@ -10,7 +10,8 @@ type Generator struct {
 	Tiles       [][]tile
 	MinRoomSide int
 
-	lastRoomId int
+	placedDoorsBetweenRoomIds [][2]int
+	roomsCount                int
 }
 
 func (g *Generator) Init() {
@@ -18,14 +19,15 @@ func (g *Generator) Init() {
 }
 
 func (g *Generator) Generate(w, h int, r random.PRNG) {
-	g.lastRoomId = 0
+	g.roomsCount = 0
+	g.placedDoorsBetweenRoomIds = make([][2]int, 0)
 	rnd = r
 	g.Tiles = make([][]tile, w)
 	for i := range g.Tiles {
 		g.Tiles[i] = make([]tile, h)
 	}
 	g.setInitialRooms()
-	for rooms := 0; rooms < 20; rooms++ {
+	for rooms := 0; rooms < 50; rooms++ {
 		if rnd.Rand(3) > 0 {
 			g.placeRandomRoom()
 		} else {
@@ -35,7 +37,7 @@ func (g *Generator) Generate(w, h int, r random.PRNG) {
 	for vaults := 0; vaults < 20; vaults++ {
 		// g.placeRandomVault()
 	}
-	for doors := 0; doors < 4; doors++ {
+	for doors := 0; doors < g.roomsCount/4; doors++ {
 		g.addRandomDoor()
 	}
 	if !g.checkConnectivity() {
@@ -100,10 +102,13 @@ func (g *Generator) isTileRectOfCode(x, y, w, h int, tcode tileCode, allowEmpty 
 	return requiredFound
 }
 
-func (g *Generator) fillTileRect(x, y, w, h int, tcode tileCode) {
+func (g *Generator) fillTileRect(x, y, w, h int, tcode tileCode, roomId int) {
 	for i := x; i < x+w; i++ {
 		for j := y; j < y+h; j++ {
 			g.Tiles[i][j].Code = tcode
+			if roomId != -1 {
+				g.Tiles[i][j].roomId = roomId
+			}
 		}
 	}
 }

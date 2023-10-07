@@ -4,12 +4,12 @@ func (g *Generator) placeRandomRoom() {
 	for try := 0; try < 100; try++ {
 		w, h := rnd.RandInRange(g.MinRoomSide, 10), rnd.RandInRange(g.MinRoomSide, 10)
 		foundRoom, x, y := g.selectRandomTileCoordsForAppendedRoom(w, h)
-		foundDoor, dx, dy := g.selectRandomTileCoordsForDoor(x-1, y-1, w+2, h+2)
+		foundDoor, dx, dy := g.selectRandomTileCoordsForRoomsDoor(x-1, y-1, w+2, h+2)
 		if !(foundRoom && foundDoor) {
 			continue
 		}
 		g.drawRoom(x-1, y-1, w+2, h+2)
-		g.Tiles[dx][dy].Code = TILE_DOOR
+		g.placeDoor(dx, dy)
 		break
 	}
 }
@@ -33,7 +33,7 @@ func (g *Generator) selectRandomTileCoordsForAppendedRoom(w, h int) (bool, int, 
 	}
 }
 
-func (g *Generator) selectRandomTileCoordsForDoor(x, y, w, h int) (bool, int, int) {
+func (g *Generator) selectRandomTileCoordsForRoomsDoor(x, y, w, h int) (bool, int, int) {
 	cands := make([][2]int, 0)
 	for i := x; i < x+w; i++ {
 		// exclude corners of current room
@@ -56,12 +56,7 @@ func (g *Generator) selectRandomTileCoordsForDoor(x, y, w, h int) (bool, int, in
 }
 
 func (g *Generator) drawRoom(x, y, w, h int) {
-	g.fillTileRect(x, y, w, h, TILE_WALL)
-	g.fillTileRect(x+1, y+1, w-2, h-2, TILE_FLOOR)
-	for i := x + 1; i <= w-2; i++ {
-		for j := y + 1; j <= h-2; j++ {
-			g.tileAt(i, j).roomId = g.lastRoomId
-		}
-	}
-	g.lastRoomId++
+	g.fillTileRect(x, y, w, h, TILE_WALL, -1)
+	g.fillTileRect(x+1, y+1, w-2, h-2, TILE_FLOOR, g.roomsCount)
+	g.roomsCount++
 }

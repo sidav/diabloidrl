@@ -124,6 +124,7 @@ func testGen() {
 	gen := roomgrowinggenerator.Generator{
 		MinRoomSide: 4,
 	}
+	roomgrowinggenerator.SetDebugCw(cw)
 	gen.Init()
 	key := ""
 	for key != "ESCAPE" {
