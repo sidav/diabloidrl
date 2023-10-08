@@ -20,6 +20,12 @@ func (g *Generator) selectCoordsToPlaceVault(v []string, inside bool) (bool, int
 }
 
 func (g *Generator) canVaultBePlacedInsideAt(v []string, vx, vy int) bool {
+	if !g.isRectInBounds(vx-1, vy-1, len(v)+2, len(v[0])+2) {
+		return false
+	}
+	if !g.doesRectBoundContainOnlyTile(vx-1, vy-1, len(v)+2, len(v[0])+2, TILE_FLOOR) {
+		return false
+	}
 	for i := 0; i < len(v); i++ {
 		for j := 0; j < len(v[i]); j++ {
 			x, y := vx+i, vy+j

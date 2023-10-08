@@ -122,7 +122,7 @@ func putGraphFromArray(arr []int, sum int) {
 
 func testGen() {
 	gen := roomgrowinggenerator.Generator{
-		MinRoomSide: 4,
+		MinRoomSide: 3,
 	}
 	roomgrowinggenerator.SetDebugCw(cw)
 	gen.Init()

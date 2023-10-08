@@ -101,6 +101,20 @@ func (g *Generator) isRectInBounds(x, y, w, h int) bool {
 	return x >= 0 && x < len(g.Tiles)-w && y >= 0 && y < len(g.Tiles[0])-h
 }
 
+func (g *Generator) doesRectBoundContainOnlyTile(x, y, w, h int, codeToCount tileCode) bool {
+	for i := x; i < x+w; i++ {
+		if g.tileAt(i, y).Code != codeToCount || g.tileAt(i, y+h-1).Code != codeToCount {
+			return false
+		}
+	}
+	for j := y; j < y+h; j++ {
+		if g.tileAt(x, j).Code != codeToCount || g.tileAt(x+w-1, j).Code != codeToCount {
+			return false
+		}
+	}
+	return true
+}
+
 func (g *Generator) countTileCodesInRect(x, y, w, h int, codeToCount tileCode) int {
 	count := 0
 	for i := x; i < x+w; i++ {
