@@ -143,10 +143,13 @@ func testGen() {
 					cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
 					rune = '+'
 				case roomgrowinggenerator.TILE_WALL:
-					cw.SetStyle(tcell.ColorBlack, tcell.ColorDarkRed)
-					rune = '#'
+					cw.SetStyle(tcell.ColorDarkMagenta, tcell.ColorDarkRed)
+					rune = ' '
+				case roomgrowinggenerator.TILE_FENCE:
+					cw.SetStyle(tcell.ColorDarkCyan, tcell.ColorBlack)
+					rune = '"'
 				}
-				if !gen.Tiles[x][y].Connected && gen.Tiles[x][y].Code != roomgrowinggenerator.TILE_UNFILLED {
+				if !gen.Tiles[x][y].Connected && gen.Tiles[x][y].Code == roomgrowinggenerator.TILE_FLOOR {
 					cw.InverseStyle()
 				}
 				cw.PutChar(rune, x, y)

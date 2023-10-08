@@ -85,7 +85,7 @@ func (g *Generator) canVaultBePlacedInsideAt(v []string, vx, vy int) bool {
 			switch rune(v[i][j]) {
 			case ' ':
 				good = currentCode != TILE_DOOR
-			case '#':
+			case '#', '\'':
 				good = currentCode == TILE_WALL || currentCode == TILE_FLOOR
 			case '+':
 				good = currentCode == TILE_DOOR || currentCode == TILE_FLOOR //  && g.isTileGoodForDoor(x, y, true)
@@ -113,7 +113,7 @@ func (g *Generator) canVaultBePlacedOutsideAt(v []string, vx, vy int) bool {
 			switch rune(v[i][j]) {
 			case ' ':
 				good = currentCode != TILE_DOOR
-			case '#':
+			case '#', '\'':
 				good = currentCode == TILE_WALL || currentCode == TILE_UNFILLED
 			case '+':
 				good = currentCode == TILE_DOOR || currentCode == TILE_UNFILLED //  && g.isTileGoodForDoor(x, y, true)

@@ -7,6 +7,7 @@ const (
 	TILE_WALL
 	TILE_FLOOR
 	TILE_DOOR
+	TILE_FENCE
 )
 
 type tile struct {
@@ -29,6 +30,8 @@ func (t *tile) setByVaultChar(vc rune) {
 		t.Code = TILE_DOOR
 	case '.':
 		t.Code = TILE_FLOOR
+	case '\'':
+		t.Code = TILE_FENCE
 	default:
 		dbgPanic("No such char: %v", vc)
 	}
