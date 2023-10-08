@@ -14,14 +14,6 @@ type Generator struct {
 	roomsCount                int
 }
 
-func (g *Generator) Init() {
-	// makeVaultsVarians()
-	// for i := range allVaults {
-	// 	g.dbgShowVault(allVaults[i])
-	// 	g.dbgFlush()
-	// }
-}
-
 func (g *Generator) Generate(w, h int, r random.PRNG) {
 	g.roomsCount = 0
 	g.placedDoorsBetweenRoomIds = make([][2]int, 0)

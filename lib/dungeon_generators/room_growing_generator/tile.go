@@ -1,7 +1,5 @@
 package roomgrowinggenerator
 
-import "fmt"
-
 type tileCode uint8
 
 const (
@@ -32,7 +30,7 @@ func (t *tile) setByVaultChar(vc rune) {
 	case '.':
 		t.Code = TILE_FLOOR
 	default:
-		panic(fmt.Sprintf("No such char: %v", vc))
+		dbgPanic("No such char: %v", vc)
 	}
 }
 

@@ -1,51 +1,57 @@
 package roomgrowinggenerator
 
-func (g *Generator) placeRandomVault(inside bool) {
-	for try := 0; try < 10; try++ {
-		var randomVault []string
-		if inside {
-			randomVault = insideVaults[rnd.Rand(len(insideVaults))]
-		} else {
-			randomVault = outsideVaults[rnd.Rand(len(outsideVaults))]
-		}
-		randomVault = makeRandomTransofrmationForVault(randomVault)
-
-		place, x, y := g.selectCoordsToPlaceVault(randomVault, inside)
-		if !place {
-			continue
-		}
-
-		g.placeVaultAt(randomVault, x, y)
-
-		return
+func makeRandomTransofrmationForVault(v []string) []string {
+	if rnd.Rand(2) == 0 {
+		v = transposeVault(v)
 	}
+	if rnd.Rand(2) == 0 {
+		v = mirrorVaultX(v)
+	}
+	if rnd.Rand(2) == 0 {
+		v = mirrorVaultY(v)
+	}
+	return v
 }
 
-func (g *Generator) placeVaultAt(v []string, x, y int) {
-	updateId := doesVaultContainDoor(v)
-	roomPlaced := false
-	for i := 0; i < len(v); i++ {
-		for j := 0; j < len(v[i]); j++ {
-			rx, ry := x+i, y+j
-			g.tileAt(rx, ry).setByVaultChar(rune(v[i][j]))
-			if updateId && rune(v[i][j]) == '.' {
-				g.tileAt(rx, ry).roomId = g.roomsCount
-				roomPlaced = true
-			}
+func revertString(s string) string {
+	newS := make([]byte, len(s))
+	for i := len(s) - 1; i >= 0; i-- {
+		newS[len(s)-i-1] = s[i]
+	}
+	return string(newS)
+}
+
+func mirrorVaultX(v []string) []string {
+	mirrorX := []string{}
+	for x := range v {
+		mirrorX = append(mirrorX, revertString(v[x]))
+	}
+	return mirrorX
+}
+
+func mirrorVaultY(v []string) []string {
+	mirrorY := []string{}
+	for x := range v {
+		mirrorY = append(mirrorY, v[len(v)-1-x])
+	}
+	return mirrorY
+}
+
+func transposeVault(v []string) []string {
+	transp := make([][]byte, len(v[0]))
+	for i := range transp {
+		transp[i] = make([]byte, len(v))
+	}
+	for x := range v {
+		for y := range v[x] {
+			transp[y][x] = v[x][y]
 		}
 	}
-	if updateId {
-		for i := 0; i < len(v); i++ {
-			for j := 0; j < len(v[i]); j++ {
-				if rune(v[i][j]) == '+' {
-					g.placeDoor(x+i, y+j)
-				}
-			}
-		}
+	str := make([]string, 0)
+	for i := range transp {
+		str = append(str, string(transp[i]))
 	}
-	if roomPlaced {
-		g.roomsCount++
-	}
+	return str
 }
 
 func doesVaultContainDoor(v []string) bool {
@@ -57,73 +63,4 @@ func doesVaultContainDoor(v []string) bool {
 		}
 	}
 	return false
-}
-
-// Outside vaults SHOULD have at least one outer door.
-var outsideVaults = [][]string{
-	{
-		"##########",
-		"#........+",
-		"#.########",
-		"#........#",
-		"########.#",
-		"#........#",
-		"##########",
-	},
-	{
-		"#####    ",
-		"#...#    ",
-		"#...#    ",
-		"#...#####",
-		"#.......#",
-		"#.......+",
-		"#########",
-	},
-	{
-		"  #####  ",
-		" ##...## ",
-		"##.....##",
-		"#.......+",
-		"##.....##",
-		" ##...## ",
-		"  #####  ",
-	},
-	{
-		"   ####   ",
-		"   #..#   ",
-		"   #..#   ",
-		"####..####",
-		"#........+",
-		"#........+",
-		"####..####",
-		"   #..#   ",
-		"   #..#   ",
-		"   ####   ",
-	},
-}
-
-// Inside vaults will be surrounded by floor tiles.
-var insideVaults = [][]string{
-	{
-		".#.",
-		"###",
-		".#.",
-	},
-	{
-		"######",
-		"#....#",
-		"#.##.#",
-		"#.##.+",
-		"#....#",
-		"######",
-	},
-	{
-		"######",
-		"#..#..",
-		"#..#..",
-		"#.....",
-		"#..#..",
-		"#..#..",
-		"######",
-	},
 }

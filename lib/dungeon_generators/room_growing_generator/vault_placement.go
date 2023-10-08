@@ -1,5 +1,53 @@
 package roomgrowinggenerator
 
+func (g *Generator) placeRandomVault(inside bool) {
+	for try := 0; try < 10; try++ {
+		var randomVault []string
+		if inside {
+			randomVault = insideVaults[rnd.Rand(len(insideVaults))]
+		} else {
+			randomVault = outsideVaults[rnd.Rand(len(outsideVaults))]
+		}
+		randomVault = makeRandomTransofrmationForVault(randomVault)
+
+		place, x, y := g.selectCoordsToPlaceVault(randomVault, inside)
+		if !place {
+			continue
+		}
+
+		g.placeVaultAt(randomVault, x, y)
+
+		return
+	}
+}
+
+func (g *Generator) placeVaultAt(v []string, x, y int) {
+	updateId := doesVaultContainDoor(v)
+	roomPlaced := false
+	for i := 0; i < len(v); i++ {
+		for j := 0; j < len(v[i]); j++ {
+			rx, ry := x+i, y+j
+			g.tileAt(rx, ry).setByVaultChar(rune(v[i][j]))
+			if updateId && rune(v[i][j]) == '.' {
+				g.tileAt(rx, ry).roomId = g.roomsCount
+				roomPlaced = true
+			}
+		}
+	}
+	if updateId {
+		for i := 0; i < len(v); i++ {
+			for j := 0; j < len(v[i]); j++ {
+				if rune(v[i][j]) == '+' {
+					g.placeDoor(x+i, y+j)
+				}
+			}
+		}
+	}
+	if roomPlaced {
+		g.roomsCount++
+	}
+}
+
 func (g *Generator) selectCoordsToPlaceVault(v []string, inside bool) (bool, int, int) {
 	cands := make([][2]int, 0)
 	for x := 0; x < len(g.Tiles)-len(v); x++ {
@@ -77,18 +125,7 @@ func (g *Generator) canVaultBePlacedOutsideAt(v []string, vx, vy int) bool {
 				good = currentCode == TILE_FLOOR || currentCode == TILE_UNFILLED
 			}
 			if !good {
-				// g.dbgDrawCurrentState(false)
-				// g.dbgShowVault(v, i, j)
-				// g.dbgHighlightTile(vx, vy)
-				// g.dbgHighlightTileWithComment(x, y, "Tile '%v' rejected", string(v[i][j]))
-				// g.dbgFlush()
 				return false
-			} else {
-				// g.dbgDrawCurrentState(false)
-				// g.dbgShowVault(v, i, j)
-				// g.dbgHighlightTile(vx, vy)
-				// g.dbgHighlightTileWithComment(x, y, "Tile '%v' passes", string(v[i][j]))
-				// g.dbgFlush()
 			}
 		}
 	}

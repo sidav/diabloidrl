@@ -14,6 +14,10 @@ func SetDebugCw(cwr *tcell_console_wrapper.ConsoleWrapper) {
 	cw = cwr
 }
 
+func dbgPanic(comment string, commentArgs ...interface{}) {
+	panic(fmt.Sprintf(comment, commentArgs...))
+}
+
 func (gen *Generator) dbgDrawCurrentState(showIds bool) {
 	cw.ClearScreen()
 	for x := range gen.Tiles {
