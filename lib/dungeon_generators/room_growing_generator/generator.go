@@ -24,17 +24,19 @@ func (g *Generator) Generate(w, h int, r random.PRNG) {
 	}
 	g.setInitialRooms()
 	// for rooms := 0; rooms < 25; rooms++ {
-	for g.calculateFillPercent() < 70 {
+	for g.calculateTileFillPercentage(TILE_UNFILLED) > 30 {
 		if rnd.Rand(3) == 0 {
 			g.placeRandomRoom()
 		} else {
 			g.placeRandomVault(false)
 		}
 	}
-	for vaults := 0; vaults < g.roomsCount/2; vaults++ {
+	insideVaults := 0
+	for insideVaults < 20 || g.calculateTileFillPercentage(TILE_WALL) < 30 {
 		g.placeRandomVault(true)
+		insideVaults++
 	}
-	for doors := 0; doors < g.roomsCount/5; doors++ {
+	for doors := 0; doors < g.roomsCount/4; doors++ {
 		g.addRandomDoor()
 	}
 	// g.dbgDrawCurrentState(false)
@@ -46,13 +48,13 @@ func (g *Generator) Generate(w, h int, r random.PRNG) {
 	}
 }
 
-func (g *Generator) calculateFillPercent() int {
+func (g *Generator) calculateTileFillPercentage(code tileCode) int {
 	w, h := len(g.Tiles), len(g.Tiles[0])
 	square := w * h
 	filledTiles := 0
 	for x := range g.Tiles {
 		for y := range g.Tiles[x] {
-			if g.tileAt(x, y).Code != TILE_UNFILLED {
+			if g.tileAt(x, y).Code == code {
 				filledTiles++
 			}
 		}
