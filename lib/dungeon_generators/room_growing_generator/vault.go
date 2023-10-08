@@ -1,130 +1,140 @@
 package roomgrowinggenerator
 
-func (g *Generator) placeRandomVault() {
-	for try := 0; try < len(allVaults); try++ {
-		randomVault := allVaults[rnd.Rand(len(allVaults))]
-		place, x, y := g.selectCoordsToPlaceVault(randomVault)
+func (g *Generator) placeRandomVault(inside bool) {
+	for try := 0; try < 10; try++ {
+		var randomVault []string
+		if inside {
+			randomVault = insideVaults[rnd.Rand(len(insideVaults))]
+		} else {
+			randomVault = outsideVaults[rnd.Rand(len(outsideVaults))]
+		}
+		randomVault = makeRandomTransofrmationForVault(randomVault)
+		// g.dbgShowVault(randomVault)
+		// g.dbgFlush()
+
+		place, x, y := g.selectCoordsToPlaceVault(randomVault, inside)
 		if !place {
 			continue
 		}
-		g.placeVaultAt(randomVault, x, y)
+		// g.dbgDrawCurrentState(false)
+		// g.dbgHighlightTile(x, y)
+		// g.dbgFlush()
+
+		if inside {
+			g.placeInsideVaultAt(randomVault, x, y)
+		} else {
+			g.placeOutsideVaultAt(randomVault, x, y)
+		}
+
+		// g.dbgDrawCurrentState(false)
+		// g.dbgHighlightTile(x, y)
+		// g.dbgFlush()
+
+		return
 	}
 }
 
-func (g *Generator) placeVaultAt(v []string, x, y int) {
+func (g *Generator) placeInsideVaultAt(v []string, x, y int) {
+	roomPlaced := false
 	for i := 0; i < len(v); i++ {
 		for j := 0; j < len(v[i]); j++ {
 			g.tileAt(x+i, y+j).setByVaultChar(rune(v[i][j]))
-		}
-	}
-}
-
-func (g *Generator) selectCoordsToPlaceVault(v []string) (bool, int, int) {
-	cands := make([][2]int, 0)
-	for x := len(v); x < len(g.Tiles)-len(v); x++ {
-		for y := len(v[0]); y < len(g.Tiles[x])-len(v[0]); y++ {
-			if g.canVaultBePlacedAt(v, x, y) {
-				cands = append(cands, [2]int{x, y})
+			if rune(v[i][j]) == '.' {
+				g.tileAt(x+i, y+j).roomId = g.roomsCount
+				roomPlaced = true
 			}
 		}
 	}
-	if len(cands) == 0 {
-		return false, 0, 0
-	}
-	index := rnd.Rand(len(cands))
-	return true, cands[index][0], cands[index][1]
-}
-
-func (g *Generator) canVaultBePlacedAt(v []string, vx, vy int) bool {
 	for i := 0; i < len(v); i++ {
 		for j := 0; j < len(v[i]); j++ {
-			x, y := vx+i, vy+j
-			if !g.areCoordsInBounds(x, y) {
-				return false
-			}
-			currentCode := g.tileCodeAt(x, y)
-			good := false
-			switch rune(v[i][j]) {
-			case ' ':
-				good = true || currentCode != TILE_DOOR
-			case '#':
-				good = currentCode == TILE_WALL || currentCode == TILE_FLOOR || currentCode == TILE_UNFILLED
-			case '+':
-				good = (currentCode == TILE_WALL || currentCode == TILE_DOOR) && g.isTileGoodForDoor(x, y, true)
-			case '.':
-				good = currentCode == TILE_FLOOR || currentCode == TILE_UNFILLED
-			}
-			if !good {
-				return false
+			if rune(v[i][j]) == '+' {
+				g.placeDoor(x+i, y+j)
 			}
 		}
 	}
-	return true
-}
-
-func makeVaultsVarians() {
-	newVaults := make([][]string, 0)
-	for _, v := range allVaults {
-		mirrorX := []string{}
-		for x := range v {
-			mirrorX = append(mirrorX, invertString(v[x]))
-		}
-		mirrorY := []string{}
-		for x := range v {
-			mirrorY = append(mirrorY, v[len(v)-1-x])
-		}
-		newVaults = append(newVaults, mirrorX, mirrorY)
+	if roomPlaced {
+		g.roomsCount++
 	}
-	allVaults = append(allVaults, newVaults...)
 }
 
-func invertString(s string) string {
-	newS := make([]byte, len(s))
-	for i := len(s) - 1; i >= 0; i-- {
-		newS = append(newS, s[i])
+func (g *Generator) placeOutsideVaultAt(v []string, x, y int) {
+	roomPlaced := false
+	doorCands := make([][2]int, 0)
+	for i := 0; i < len(v); i++ {
+		for j := 0; j < len(v[i]); j++ {
+			rx, ry := x+i, y+j
+			if rune(v[i][j]) == '#' && g.tileAt(rx, ry).Code == TILE_WALL && g.isTileGoodForDoor(rx, ry, false) {
+				doorCands = append(doorCands, [2]int{rx, ry})
+			}
+			g.tileAt(rx, ry).setByVaultChar(rune(v[i][j]))
+			if rune(v[i][j]) == '.' {
+				g.tileAt(rx, ry).roomId = g.roomsCount
+				roomPlaced = true
+			}
+		}
 	}
-	return string(newS)
+	for i := 0; i < len(v); i++ {
+		for j := 0; j < len(v[i]); j++ {
+			if rune(v[i][j]) == '+' {
+				g.placeDoor(x+i, y+j)
+			}
+		}
+	}
+	if len(doorCands) > 0 {
+		index := rnd.Rand(len(doorCands))
+		g.placeDoor(doorCands[index][0], doorCands[index][1])
+	}
+	if roomPlaced {
+		g.roomsCount++
+	}
 }
 
-var allVaults = [][]string{
+var outsideVaults = [][]string{
 	{
-		"        ",
-		" ###### ",
-		" #....# ",
-		" #....# ",
-		" #....+ ",
-		" #....# ",
-		" ###### ",
-		"        ",
-	},
-	{
-		"        ",
-		" ###### ",
-		" #....# ",
-		" #.##.# ",
-		" #.##.+ ",
-		" #....# ",
-		" ###### ",
-		"        ",
-	},
-	{
-		"##+##    ",
-		"#...#    ",
-		"#...+    ",
-		"#...#####",
-		"#.......#",
-		"#.......+",
-		"#########",
-	},
-	{
-		"           ",
-		" ######### ",
-		" ###...### ",
-		" ##.....## ",
-		" +.......+ ",
-		" ##.....## ",
-		" ###...### ",
-		" ######### ",
-		"           ",
+		"          ",
+		"##########",
+		"#........#",
+		"##########",
+		"          ",
 	},
 }
+var insideVaults = [][]string{
+	{
+		" ... ",
+		"..#..",
+		".###.",
+		"..#..",
+		" ... ",
+	},
+	{
+		"........",
+		".######.",
+		".#....#.",
+		".#.##.#.",
+		".#.##.+.",
+		".#....#.",
+		".######.",
+		"........",
+	},
+}
+
+// {
+// 	"##+##    ",
+// 	"#...#    ",
+// 	"#...+    ",
+// 	"#...#####",
+// 	"#.......#",
+// 	"#.......+",
+// 	"#########",
+// },
+// {
+// 	"           ",
+// 	" ######### ",
+// 	" ###...### ",
+// 	" ##.....## ",
+// 	" +.......+ ",
+// 	" ##.....## ",
+// 	" ###...### ",
+// 	" ######### ",
+// 	"           ",
+// },

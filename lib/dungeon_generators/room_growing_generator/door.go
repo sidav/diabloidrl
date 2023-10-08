@@ -1,12 +1,12 @@
 package roomgrowinggenerator
 
-import "fmt"
-
 func (g *Generator) placeDoor(x, y int) {
 	g.tileAt(x, y).Code = TILE_DOOR
 	id1, id2 := g.getRoomIdsNear(x, y)
-	g.placedDoorsBetweenRoomIds = append(g.placedDoorsBetweenRoomIds,
-		[2]int{id1, id2})
+	if !g.wereRoomsAlreadyConnected(id1, id2) {
+		g.placedDoorsBetweenRoomIds = append(g.placedDoorsBetweenRoomIds,
+			[2]int{id1, id2})
+	}
 }
 
 func (g *Generator) getRoomIdsNear(x, y int) (int, int) {
@@ -19,9 +19,9 @@ func (g *Generator) getRoomIdsNear(x, y int) (int, int) {
 		id1 = g.tileAt(x, y-1).roomId
 		id2 = g.tileAt(x, y+1).roomId
 	}
-	if id1 == id2 {
-		panic(fmt.Sprintf("Wat was connected?! IDs are %d and %d, LRI is %d", id1, id2, g.roomsCount))
-	}
+	// if id1 == id2 {
+	// 	panic(fmt.Sprintf("Wat was connected?! IDs are %d and %d, LRI is %d", id1, id2, g.roomsCount))
+	// }
 	return id1, id2
 }
 
@@ -58,7 +58,7 @@ func (g *Generator) addRandomDoor() {
 		for y := g.MinRoomSide + 1; y < len(g.Tiles[x])-g.MinRoomSide; y++ {
 			if g.isTileGoodForDoor(x, y, true) {
 				id1, id2 := g.getRoomIdsNear(x, y)
-				if g.wereRoomsAlreadyConnected(id1, id2) {
+				if id1 == id2 || g.wereRoomsAlreadyConnected(id1, id2) {
 					continue
 				}
 				cands = append(cands, [2]int{x, y})

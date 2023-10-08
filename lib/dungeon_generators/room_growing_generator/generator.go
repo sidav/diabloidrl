@@ -15,7 +15,11 @@ type Generator struct {
 }
 
 func (g *Generator) Init() {
-	makeVaultsVarians()
+	// makeVaultsVarians()
+	// for i := range allVaults {
+	// 	g.dbgShowVault(allVaults[i])
+	// 	g.dbgFlush()
+	// }
 }
 
 func (g *Generator) Generate(w, h int, r random.PRNG) {
@@ -27,15 +31,9 @@ func (g *Generator) Generate(w, h int, r random.PRNG) {
 		g.Tiles[i] = make([]tile, h)
 	}
 	g.setInitialRooms()
-	for rooms := 0; rooms < 50; rooms++ {
-		if rnd.Rand(3) > 0 {
-			g.placeRandomRoom()
-		} else {
-			// g.placeRandomVault()
-		}
-	}
-	for vaults := 0; vaults < 20; vaults++ {
-		// g.placeRandomVault()
+	for rooms := 0; rooms < 1; rooms++ {
+		g.placeRandomRoom()
+		g.placeRandomVault(false)
 	}
 	for doors := 0; doors < g.roomsCount/4; doors++ {
 		g.addRandomDoor()
