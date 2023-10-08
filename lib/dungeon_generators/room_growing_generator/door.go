@@ -41,12 +41,14 @@ func (g *Generator) isTileGoodForDoor(x, y int, shouldConnectRooms bool) bool {
 	if !(g.areCoordsInBounds(x, y) && g.tileAt(x, y).Code == TILE_WALL) {
 		return false
 	}
-	if g.countTileCodesAround(x, y, TILE_WALL) != 3 {
+	if g.countTileCodesInPlusShapeAround(x, y, TILE_WALL) > 2 {
 		return false
 	}
-	// check if this tile is not on a corner
+
+	// check if this tile is not on a L-shaped corner
 	isNonCornerTile := g.tileCodeAt(x-1, y) == TILE_WALL && g.tileCodeAt(x+1, y) == TILE_WALL ||
 		g.tileCodeAt(x, y-1) == TILE_WALL && g.tileCodeAt(x, y+1) == TILE_WALL
+	// check if there are floor tiles on front and back in any non-diagonal direction
 	connectsRooms := g.tileCodeAt(x-1, y) == TILE_FLOOR && g.tileCodeAt(x+1, y) == TILE_FLOOR ||
 		g.tileCodeAt(x, y-1) == TILE_FLOOR && g.tileCodeAt(x, y+1) == TILE_FLOOR
 	return isNonCornerTile && (connectsRooms || !shouldConnectRooms)

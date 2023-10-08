@@ -59,13 +59,9 @@ func (g *Generator) placeInsideVaultAt(v []string, x, y int) {
 
 func (g *Generator) placeOutsideVaultAt(v []string, x, y int) {
 	roomPlaced := false
-	doorCands := make([][2]int, 0)
 	for i := 0; i < len(v); i++ {
 		for j := 0; j < len(v[i]); j++ {
 			rx, ry := x+i, y+j
-			if rune(v[i][j]) == '#' && g.tileAt(rx, ry).Code == TILE_WALL && g.isTileGoodForDoor(rx, ry, false) {
-				doorCands = append(doorCands, [2]int{rx, ry})
-			}
 			g.tileAt(rx, ry).setByVaultChar(rune(v[i][j]))
 			if rune(v[i][j]) == '.' {
 				g.tileAt(rx, ry).roomId = g.roomsCount
@@ -80,22 +76,35 @@ func (g *Generator) placeOutsideVaultAt(v []string, x, y int) {
 			}
 		}
 	}
-	if len(doorCands) > 0 {
-		index := rnd.Rand(len(doorCands))
-		g.placeDoor(doorCands[index][0], doorCands[index][1])
-	}
 	if roomPlaced {
 		g.roomsCount++
 	}
 }
 
+// Outside walls are FORCED to be connected by a door.
 var outsideVaults = [][]string{
 	{
-		"          ",
 		"##########",
-		"#........#",
+		"#........+",
 		"##########",
-		"          ",
+	},
+	{
+		"#####    ",
+		"#...#    ",
+		"#...#    ",
+		"#...#####",
+		"#.......#",
+		"#.......+",
+		"#########",
+	},
+	{
+		"  #####  ",
+		" ##...## ",
+		"##.....##",
+		"#.......+",
+		"##.....##",
+		" ##...## ",
+		"  #####  ",
 	},
 }
 var insideVaults = [][]string{
@@ -117,24 +126,3 @@ var insideVaults = [][]string{
 		"........",
 	},
 }
-
-// {
-// 	"##+##    ",
-// 	"#...#    ",
-// 	"#...+    ",
-// 	"#...#####",
-// 	"#.......#",
-// 	"#.......+",
-// 	"#########",
-// },
-// {
-// 	"           ",
-// 	" ######### ",
-// 	" ###...### ",
-// 	" ##.....## ",
-// 	" +.......+ ",
-// 	" ##.....## ",
-// 	" ###...### ",
-// 	" ######### ",
-// 	"           ",
-// },

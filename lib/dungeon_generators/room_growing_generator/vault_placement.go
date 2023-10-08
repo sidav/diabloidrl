@@ -47,7 +47,7 @@ func (g *Generator) canVaultBePlacedInsideAt(v []string, vx, vy int) bool {
 }
 
 func (g *Generator) canVaultBePlacedOutsideAt(v []string, vx, vy int) bool {
-	wallIntersections := 0
+	doorIntersections := 0
 	for i := 0; i < len(v); i++ {
 		for j := 0; j < len(v[i]); j++ {
 			x, y := vx+i, vy+j
@@ -61,11 +61,12 @@ func (g *Generator) canVaultBePlacedOutsideAt(v []string, vx, vy int) bool {
 				good = currentCode != TILE_DOOR
 			case '#':
 				good = currentCode == TILE_WALL || currentCode == TILE_UNFILLED
-				if currentCode == TILE_WALL {
-					wallIntersections++
-				}
 			case '+':
-				good = currentCode == TILE_DOOR || currentCode == TILE_FLOOR || currentCode == TILE_UNFILLED //  && g.isTileGoodForDoor(x, y, true)
+				good = currentCode == TILE_DOOR || currentCode == TILE_UNFILLED //  && g.isTileGoodForDoor(x, y, true)
+				if currentCode == TILE_WALL && g.isTileGoodForDoor(x, y, false) {
+					good = true
+					doorIntersections++
+				}
 			case '.':
 				good = currentCode == TILE_FLOOR || currentCode == TILE_UNFILLED
 			}
@@ -85,5 +86,5 @@ func (g *Generator) canVaultBePlacedOutsideAt(v []string, vx, vy int) bool {
 			}
 		}
 	}
-	return true && wallIntersections > 0
+	return true && doorIntersections > 0
 }

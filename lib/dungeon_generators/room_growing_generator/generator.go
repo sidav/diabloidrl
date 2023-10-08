@@ -31,9 +31,15 @@ func (g *Generator) Generate(w, h int, r random.PRNG) {
 		g.Tiles[i] = make([]tile, h)
 	}
 	g.setInitialRooms()
-	for rooms := 0; rooms < 1; rooms++ {
-		g.placeRandomRoom()
-		g.placeRandomVault(false)
+	for rooms := 0; rooms < 25; rooms++ {
+		if rnd.Rand(2) > 0 {
+			g.placeRandomRoom()
+		} else {
+			g.placeRandomVault(false)
+		}
+	}
+	for vaults := 0; vaults < 10; vaults++ {
+		g.placeRandomVault(true)
 	}
 	for doors := 0; doors < g.roomsCount/4; doors++ {
 		g.addRandomDoor()
@@ -43,14 +49,19 @@ func (g *Generator) Generate(w, h int, r random.PRNG) {
 	}
 }
 
-func (g *Generator) countTileCodesAround(x, y int, codeToCount tileCode) int {
+func (g *Generator) countTileCodesInPlusShapeAround(x, y int, codeToCount tileCode) int {
 	sum := 0
-	for i := x - 1; i <= x+1; i++ {
-		for j := y - 1; j <= y+1; j++ {
-			if g.Tiles[i][j].Code == codeToCount {
-				sum++
-			}
-		}
+	if g.Tiles[x-1][y].Code == codeToCount {
+		sum++
+	}
+	if g.Tiles[x+1][y].Code == codeToCount {
+		sum++
+	}
+	if g.Tiles[x][y-1].Code == codeToCount {
+		sum++
+	}
+	if g.Tiles[x][y+1].Code == codeToCount {
+		sum++
 	}
 	return sum
 }
