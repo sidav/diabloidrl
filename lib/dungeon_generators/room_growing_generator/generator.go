@@ -135,6 +135,22 @@ func (g *Generator) countTileCodesInRect(x, y, w, h int, codeToCount tileCode) i
 	return count
 }
 
+func (g *Generator) selectRandomCoordsFromRect(x, y, w, h int, selectionFunc func(int, int) bool) (bool, int, int) {
+	cands := make([][2]int, 0)
+	for i := x; i < x+w; i++ {
+		for j := y; j < y+h; j++ {
+			if selectionFunc(i, j) {
+				cands = append(cands, [2]int{i, j})
+			}
+		}
+	}
+	if len(cands) > 0 {
+		index := rnd.Rand(len(cands))
+		return true, cands[index][0], cands[index][1]
+	}
+	return false, 0, 0
+}
+
 func (g *Generator) isTileRectOfCode(x, y, w, h int, tcode tileCode, allowEmpty bool) bool {
 	requiredFound := false
 	for i := x; i < x+w; i++ {

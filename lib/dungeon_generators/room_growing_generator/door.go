@@ -58,20 +58,19 @@ func (g *Generator) isTileGoodForDoor(x, y int, shouldConnectRooms bool) bool {
 }
 
 func (g *Generator) addRandomDoor() {
-	cands := make([][2]int, 0)
-	for x := g.MinRoomSide + 1; x < len(g.Tiles)-g.MinRoomSide; x++ {
-		for y := g.MinRoomSide + 1; y < len(g.Tiles[x])-g.MinRoomSide; y++ {
+	placed, dx, dy := g.selectRandomCoordsFromRect(1, 1, len(g.Tiles)-2, len(g.Tiles[0])-2,
+		func(x, y int) bool {
 			if g.isTileGoodForDoor(x, y, true) {
 				id1, id2 := g.getRoomIdsNear(x, y)
 				if id1 == id2 || g.wereRoomsAlreadyConnected(id1, id2) {
-					continue
+					return false
 				}
-				cands = append(cands, [2]int{x, y})
+				return true
 			}
-		}
-	}
-	if len(cands) > 0 {
-		index := rnd.Rand(len(cands))
-		g.placeDoor(cands[index][0], cands[index][1])
+			return false
+		},
+	)
+	if placed {
+		g.placeDoor(dx, dy)
 	}
 }
