@@ -44,6 +44,10 @@ func (g *Generator) Generate(w, h int, r random.PRNG) {
 	for doors := 0; doors < g.roomsCount/4; doors++ {
 		g.addRandomDoor()
 	}
+	// g.dbgDrawCurrentState(false)
+	// g.dbgFlush()
+	// g.dbgDrawCurrentState(true)
+	// g.dbgFlush()
 	if !g.checkConnectivity() {
 		g.tileAt(0, 0).Code = TILE_DOOR
 	}

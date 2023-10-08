@@ -9,55 +9,19 @@ func (g *Generator) placeRandomVault(inside bool) {
 			randomVault = outsideVaults[rnd.Rand(len(outsideVaults))]
 		}
 		randomVault = makeRandomTransofrmationForVault(randomVault)
-		// g.dbgShowVault(randomVault)
-		// g.dbgFlush()
 
 		place, x, y := g.selectCoordsToPlaceVault(randomVault, inside)
 		if !place {
 			continue
 		}
-		// g.dbgDrawCurrentState(false)
-		// g.dbgHighlightTile(x, y)
-		// g.dbgFlush()
 
-		if inside {
-			g.placeInsideVaultAt(randomVault, x, y)
-		} else {
-			g.placeOutsideVaultAt(randomVault, x, y)
-		}
-
-		// g.dbgDrawCurrentState(false)
-		// g.dbgHighlightTile(x, y)
-		// g.dbgFlush()
+		g.placeVaultAt(randomVault, x, y)
 
 		return
 	}
 }
 
-func (g *Generator) placeInsideVaultAt(v []string, x, y int) {
-	roomPlaced := false
-	for i := 0; i < len(v); i++ {
-		for j := 0; j < len(v[i]); j++ {
-			g.tileAt(x+i, y+j).setByVaultChar(rune(v[i][j]))
-			if rune(v[i][j]) == '.' {
-				g.tileAt(x+i, y+j).roomId = g.roomsCount
-				roomPlaced = true
-			}
-		}
-	}
-	for i := 0; i < len(v); i++ {
-		for j := 0; j < len(v[i]); j++ {
-			if rune(v[i][j]) == '+' {
-				g.placeDoor(x+i, y+j)
-			}
-		}
-	}
-	if roomPlaced {
-		g.roomsCount++
-	}
-}
-
-func (g *Generator) placeOutsideVaultAt(v []string, x, y int) {
+func (g *Generator) placeVaultAt(v []string, x, y int) {
 	roomPlaced := false
 	for i := 0; i < len(v); i++ {
 		for j := 0; j < len(v[i]); j++ {
@@ -86,6 +50,10 @@ var outsideVaults = [][]string{
 	{
 		"##########",
 		"#........+",
+		"#.########",
+		"#........#",
+		"########.#",
+		"#........#",
 		"##########",
 	},
 	{
@@ -106,6 +74,18 @@ var outsideVaults = [][]string{
 		" ##...## ",
 		"  #####  ",
 	},
+	{
+		"   ####   ",
+		"   #..#   ",
+		"   #..#   ",
+		"####..####",
+		"#........+",
+		"#........+",
+		"####..####",
+		"   #..#   ",
+		"   #..#   ",
+		"   ####   ",
+	},
 }
 var insideVaults = [][]string{
 	{
@@ -122,6 +102,17 @@ var insideVaults = [][]string{
 		".#.##.#.",
 		".#.##.+.",
 		".#....#.",
+		".######.",
+		"........",
+	},
+	{
+		"........",
+		".######.",
+		".#..#...",
+		".#..#...",
+		".#......",
+		".#..#...",
+		".#..#...",
 		".######.",
 		"........",
 	},
