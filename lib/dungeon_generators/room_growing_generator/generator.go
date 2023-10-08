@@ -31,17 +31,18 @@ func (g *Generator) Generate(w, h int, r random.PRNG) {
 		g.Tiles[i] = make([]tile, h)
 	}
 	g.setInitialRooms()
-	for rooms := 0; rooms < 25; rooms++ {
-		if rnd.Rand(2) > 0 {
+	// for rooms := 0; rooms < 25; rooms++ {
+	for g.calculateFillPercent() < 70 {
+		if rnd.Rand(3) == 0 {
 			g.placeRandomRoom()
 		} else {
 			g.placeRandomVault(false)
 		}
 	}
-	for vaults := 0; vaults < 10; vaults++ {
+	for vaults := 0; vaults < g.roomsCount/2; vaults++ {
 		g.placeRandomVault(true)
 	}
-	for doors := 0; doors < g.roomsCount/4; doors++ {
+	for doors := 0; doors < g.roomsCount/5; doors++ {
 		g.addRandomDoor()
 	}
 	// g.dbgDrawCurrentState(false)
@@ -51,6 +52,20 @@ func (g *Generator) Generate(w, h int, r random.PRNG) {
 	if !g.checkConnectivity() {
 		g.tileAt(0, 0).Code = TILE_DOOR
 	}
+}
+
+func (g *Generator) calculateFillPercent() int {
+	w, h := len(g.Tiles), len(g.Tiles[0])
+	square := w * h
+	filledTiles := 0
+	for x := range g.Tiles {
+		for y := range g.Tiles[x] {
+			if g.tileAt(x, y).Code != TILE_UNFILLED {
+				filledTiles++
+			}
+		}
+	}
+	return (100*(filledTiles) + square - 1) / square
 }
 
 func (g *Generator) countTileCodesInPlusShapeAround(x, y int, codeToCount tileCode) int {
