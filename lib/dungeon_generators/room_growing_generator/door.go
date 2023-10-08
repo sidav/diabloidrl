@@ -41,6 +41,9 @@ func (g *Generator) isTileGoodForDoor(x, y int, shouldConnectRooms bool) bool {
 	if !(g.areCoordsInBounds(x, y) && g.tileAt(x, y).Code == TILE_WALL) {
 		return false
 	}
+	if g.countTileCodesInPlusShapeAround(x, y, TILE_DOOR) > 0 {
+		return false
+	}
 	if g.countTileCodesInPlusShapeAround(x, y, TILE_WALL) > 2 {
 		return false
 	}
