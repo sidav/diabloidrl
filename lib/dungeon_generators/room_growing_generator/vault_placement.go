@@ -1,24 +1,19 @@
 package roomgrowinggenerator
 
-func (g *Generator) placeRandomVault(inside bool) {
-	for try := 0; try < 10; try++ {
-		var randomVault []string
-		if inside {
-			randomVault = insideVaults[rnd.Rand(len(insideVaults))]
-		} else {
-			randomVault = outsideVaults[rnd.Rand(len(outsideVaults))]
-		}
-		randomVault = makeRandomTransofrmationForVault(randomVault)
-
-		place, x, y := g.selectCoordsToPlaceVault(randomVault, inside)
-		if !place {
-			continue
-		}
-
-		g.placeVaultAt(randomVault, x, y)
-
-		return
+func (g *Generator) tryPlaceRandomVault(inside bool) bool {
+	var randomVault []string
+	if inside {
+		randomVault = insideVaults[rnd.Rand(len(insideVaults))]
+	} else {
+		randomVault = outsideVaults[rnd.Rand(len(outsideVaults))]
 	}
+	randomVault = makeRandomTransofrmationForVault(randomVault)
+	place, x, y := g.selectCoordsToPlaceVault(randomVault, inside)
+	if !place {
+		return false
+	}
+	g.placeVaultAt(randomVault, x, y)
+	return true
 }
 
 func (g *Generator) placeVaultAt(v []string, x, y int) {

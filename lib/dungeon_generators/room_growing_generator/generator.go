@@ -23,29 +23,42 @@ func (g *Generator) Generate(w, h int, r random.PRNG) {
 		g.Tiles[i] = make([]tile, h)
 	}
 	g.setInitialRooms()
-	// for rooms := 0; rooms < 25; rooms++ {
 	for g.calculateTileFillPercentage(TILE_UNFILLED) > 30 {
-		if rnd.Rand(3) == 0 {
-			g.placeRandomRoom()
-		} else {
-			g.placeRandomVault(false)
+		if !tryFuncNTimes(
+			func() bool {
+				if rnd.Rand(3) == 0 {
+					return g.tryPlaceRandomRoom()
+				} else {
+					return g.tryPlaceRandomVault(false)
+				}
+			},
+			1000,
+		) {
+			break
 		}
 	}
 	insideVaults := 0
-	for insideVaults < 20 || g.calculateTileFillPercentage(TILE_WALL) < 30 {
-		g.placeRandomVault(true)
+	for insideVaults < 50 {
+		if !tryFuncNTimes(func() bool { return g.tryPlaceRandomVault(true) }, 100) {
+			break
+		}
 		insideVaults++
 	}
 	for doors := 0; doors < g.roomsCount/4; doors++ {
 		g.addRandomDoor()
 	}
-	// g.dbgDrawCurrentState(false)
-	// g.dbgFlush()
-	// g.dbgDrawCurrentState(true)
-	// g.dbgFlush()
 	if !g.checkConnectivity() {
 		g.tileAt(0, 0).Code = TILE_DOOR
 	}
+}
+
+func tryFuncNTimes(fnc func() bool, times int) bool {
+	for i := 0; i < times; i++ {
+		if fnc() {
+			return true
+		}
+	}
+	return false
 }
 
 func (g *Generator) calculateTileFillPercentage(code tileCode) int {

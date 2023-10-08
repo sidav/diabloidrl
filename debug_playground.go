@@ -127,7 +127,7 @@ func testGen() {
 	roomgrowinggenerator.SetDebugCw(cw)
 	key := ""
 	for key != "ESCAPE" {
-		gen.Generate(80, 40, rnd)
+		gen.Generate(100, 40, rnd)
 		cw.ClearScreen()
 		for x := range gen.Tiles {
 			for y := range gen.Tiles[x] {
