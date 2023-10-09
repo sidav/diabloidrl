@@ -23,6 +23,7 @@ func (g *Generator) placeVaultAt(v []string, x, y int) {
 		for j := 0; j < len(v[i]); j++ {
 			rx, ry := x+i, y+j
 			g.tileAt(rx, ry).setByVaultChar(rune(v[i][j]))
+			// ',' chars do NOT change tile ID
 			if updateId && rune(v[i][j]) == '.' {
 				g.tileAt(rx, ry).roomId = g.roomsCount
 				roomPlaced = true
@@ -47,19 +48,22 @@ func (g *Generator) selectCoordsToPlaceVault(v []string, inside bool) (bool, int
 	return g.selectRandomCoordsFromRect(0, 0, len(g.Tiles)-len(v), len(g.Tiles[0])-len(v[0]),
 		func(x, y int) bool {
 			if inside {
-				return g.canVaultBePlacedInsideAt(v, x, y)
+				return g.canInsideVaultBePlacedAt(v, x, y)
 			} else {
-				return g.canVaultBePlacedOutsideAt(v, x, y)
+				return g.canOutsideVaultBePlacedAt(v, x, y)
 			}
 		},
 	)
 }
 
-func (g *Generator) canVaultBePlacedInsideAt(v []string, vx, vy int) bool {
-	if !g.isRectInBounds(vx-1, vy-1, len(v)+2, len(v[0])+2) {
-		return false
-	}
-	if !g.doesRectBoundContainOnlyTile(vx-1, vy-1, len(v)+2, len(v[0])+2, TILE_FLOOR) {
+func (g *Generator) canInsideVaultBePlacedAt(v []string, vx, vy int) bool {
+	// if !g.isRectInBounds(vx-1, vy-1, len(v)+2, len(v[0])+2) {
+	// 	return false
+	// }
+	// if !g.doesRectBoundContainOnlyTile(vx-1, vy-1, len(v)+2, len(v[0])+2, TILE_FLOOR) {
+	// 	return false
+	// }
+	if !g.isRectInBounds(vx, vy, len(v), len(v[0])) {
 		return false
 	}
 	for i := 0; i < len(v); i++ {
@@ -77,8 +81,10 @@ func (g *Generator) canVaultBePlacedInsideAt(v []string, vx, vy int) bool {
 				good = currentCode == TILE_WALL || currentCode == TILE_FLOOR
 			case '+':
 				good = currentCode == TILE_DOOR || currentCode == TILE_FLOOR //  && g.isTileGoodForDoor(x, y, true)
-			case '.':
+			case '.', ',':
 				good = currentCode == TILE_FLOOR
+			default:
+				dbgPanic("Vault contains unknown tile: %s", string(v[i][j]))
 			}
 			if !good {
 				return false
@@ -88,7 +94,7 @@ func (g *Generator) canVaultBePlacedInsideAt(v []string, vx, vy int) bool {
 	return true
 }
 
-func (g *Generator) canVaultBePlacedOutsideAt(v []string, vx, vy int) bool {
+func (g *Generator) canOutsideVaultBePlacedAt(v []string, vx, vy int) bool {
 	doorIntersections := 0
 	for i := 0; i < len(v); i++ {
 		for j := 0; j < len(v[i]); j++ {
@@ -109,8 +115,10 @@ func (g *Generator) canVaultBePlacedOutsideAt(v []string, vx, vy int) bool {
 					good = true
 					doorIntersections++
 				}
-			case '.':
+			case '.', ',':
 				good = currentCode == TILE_FLOOR || currentCode == TILE_UNFILLED
+			default:
+				dbgPanic("Vault contains unknown tile: %s", string(v[i][j]))
 			}
 			if !good {
 				return false

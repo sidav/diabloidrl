@@ -14,7 +14,7 @@ const (
 type tile struct {
 	Code      tileCode
 	roomId    int
-	Connected bool // for interconnectedness check
+	Connected bool // for connectivity check
 }
 
 func (t *tile) isConnective() bool {
@@ -23,21 +23,22 @@ func (t *tile) isConnective() bool {
 
 func (t *tile) setByVaultChar(vc rune) {
 	switch vc {
-	case ' ':
+	case charAny:
 		// do nothing
-	case '#':
+	case charWall:
 		t.Code = TILE_WALL
-	case '+':
+	case charDoor:
 		t.Code = TILE_DOOR
-	case '.':
+	case charFloor, charFloorOldId:
 		t.Code = TILE_FLOOR
-	case '\'':
+	case charFence:
 		t.Code = TILE_FENCE
 	default:
-		dbgPanic("No such char: %v", vc)
+		dbgPanic("No such char: %s", string(vc))
 	}
 }
 
+// Safe to delete. Used only for debug output
 func (t *tile) getRune() rune {
 	switch t.Code {
 	case TILE_UNFILLED:
