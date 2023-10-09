@@ -123,6 +123,7 @@ func putGraphFromArray(arr []int, sum int) {
 func testGen() {
 	gen := roomgrowinggenerator.Generator{
 		MinRoomSide: 3,
+		MaxRoomSide: 20,
 	}
 	roomgrowinggenerator.SetDebugCw(cw)
 	key := ""
@@ -148,6 +149,9 @@ func testGen() {
 				case roomgrowinggenerator.TILE_FENCE:
 					cw.SetStyle(tcell.ColorDarkCyan, tcell.ColorBlack)
 					rune = '"'
+				case roomgrowinggenerator.TILE_ENTRYPOINT:
+					cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
+					rune = '<'
 				}
 				if !gen.Tiles[x][y].Connected && gen.Tiles[x][y].Code == roomgrowinggenerator.TILE_FLOOR {
 					cw.InverseStyle()

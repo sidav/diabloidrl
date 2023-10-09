@@ -1,7 +1,7 @@
 package roomgrowinggenerator
 
 func (g *Generator) tryPlaceRandomRoom() bool {
-	w, h := rnd.RandInRange(g.MinRoomSide, 10), rnd.RandInRange(g.MinRoomSide, 10)
+	w, h := rnd.RandInRange(g.MinRoomSide, g.MaxRoomSide), rnd.RandInRange(g.MinRoomSide, g.MaxRoomSide)
 	foundRoom, x, y := g.selectRandomTileCoordsForAppendedRoom(w, h)
 	foundDoor, dx, dy := g.selectRandomTileCoordsForRoomsDoor(x-1, y-1, w+2, h+2)
 	if !(foundRoom && foundDoor) {

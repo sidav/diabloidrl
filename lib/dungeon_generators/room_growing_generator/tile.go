@@ -8,6 +8,7 @@ const (
 	TILE_FLOOR
 	TILE_DOOR
 	TILE_FENCE
+	TILE_ENTRYPOINT
 )
 
 type tile struct {
@@ -17,7 +18,7 @@ type tile struct {
 }
 
 func (t *tile) isConnective() bool {
-	return t.Code == TILE_FLOOR || t.Code == TILE_DOOR
+	return t.Code == TILE_FLOOR || t.Code == TILE_DOOR || t.Code == TILE_ENTRYPOINT
 }
 
 func (t *tile) setByVaultChar(vc rune) {
