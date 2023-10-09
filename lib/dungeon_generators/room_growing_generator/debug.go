@@ -44,13 +44,17 @@ func (gen *Generator) dbgDrawCurrentState(showIds bool) {
 					continue
 				}
 				cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
-				char = rune(strconv.Itoa(gen.Tiles[x][y].roomId)[0])
+				idStr := strconv.Itoa(gen.Tiles[x][y].roomId)
+				char = rune(idStr[len(idStr)-1])
 			case TILE_DOOR:
 				cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
 				char = '+'
 			case TILE_WALL:
 				cw.SetStyle(tcell.ColorBlack, tcell.ColorDarkRed)
 				char = '#'
+			case TILE_FENCE:
+				cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
+				char = '"'
 			}
 			cw.PutChar(char, x, y)
 		}
