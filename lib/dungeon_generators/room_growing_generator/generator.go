@@ -178,3 +178,15 @@ func (g *Generator) fillTileRect(x, y, w, h int, tcode tileCode, roomId int) {
 		}
 	}
 }
+
+func (g *Generator) Test(w, h int, r random.PRNG) {
+	const iterations = 25
+	for x := 0; x < iterations; x++ {
+		dbgMessage("Testing random maps connectivity (%d/%d)", x+1, iterations)
+		dbgFlush(false)
+		g.Generate(w, h, r)
+		if !g.checkConnectivity() {
+			panic("Bad map generated during the test.")
+		}
+	}
+}

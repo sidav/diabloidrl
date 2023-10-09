@@ -18,6 +18,18 @@ func dbgPanic(comment string, commentArgs ...interface{}) {
 	panic(fmt.Sprintf(comment, commentArgs...))
 }
 
+func dbgFlush(awaitKeypress bool) {
+	cw.FlushScreen()
+	if awaitKeypress {
+		cw.ReadKey()
+	}
+}
+
+func dbgMessage(comment string, commentArgs ...interface{}) {
+	cw.SetStyle(tcell.ColorBlack, tcell.ColorDarkRed)
+	cw.PutString(fmt.Sprintf(comment, commentArgs...), 0, 0)
+}
+
 func (gen *Generator) dbgDrawCurrentState(showIds bool) {
 	cw.ClearScreen()
 	for x := range gen.Tiles {
@@ -54,11 +66,6 @@ func (g *Generator) dbgHighlightTileWithComment(x, y int, comment string, commen
 	cw.SetStyle(tcell.ColorDarkRed, tcell.ColorDarkCyan)
 	cw.PutChar('*', x, y)
 	cw.PutString(fmt.Sprintf(comment, commentArgs...), 0, 0)
-}
-
-func (g *Generator) dbgFlush() {
-	cw.FlushScreen()
-	cw.ReadKey()
 }
 
 func (g *Generator) dbgShowVault(v []string, hlx, hly int) {
