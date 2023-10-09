@@ -32,10 +32,10 @@ func dbgMessage(comment string, commentArgs ...interface{}) {
 
 func (gen *Generator) dbgDrawCurrentState(showIds bool) {
 	cw.ClearScreen()
-	for x := range gen.Tiles {
-		for y := range gen.Tiles[x] {
+	for x := range gen.tiles {
+		for y := range gen.tiles[x] {
 			char := '?'
-			switch gen.Tiles[x][y].Code {
+			switch gen.tiles[x][y].Code {
 			case TILE_UNFILLED:
 				cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
 				char = '.'
@@ -44,7 +44,7 @@ func (gen *Generator) dbgDrawCurrentState(showIds bool) {
 					continue
 				}
 				cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
-				idStr := strconv.Itoa(gen.Tiles[x][y].roomId)
+				idStr := strconv.Itoa(gen.tiles[x][y].roomId)
 				char = rune(idStr[len(idStr)-1])
 			case TILE_DOOR:
 				cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
@@ -79,7 +79,7 @@ func (g *Generator) dbgShowVault(v []string, hlx, hly int) {
 			if hlx == x && hly == y {
 				cw.InverseStyle()
 			}
-			cw.PutChar(rune(v[x][y]), x+len(g.Tiles), y)
+			cw.PutChar(rune(v[x][y]), x+len(g.tiles), y)
 		}
 	}
 }

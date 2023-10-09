@@ -13,7 +13,7 @@ func (g *Generator) tryPlaceRandomRoom() bool {
 }
 
 func (g *Generator) selectRandomTileCoordsForAppendedRoom(w, h int) (bool, int, int) {
-	return g.selectRandomCoordsFromRect(1, 1, len(g.Tiles)-w-1, len(g.Tiles[0])-h-1,
+	return g.selectRandomCoordsFromRect(1, 1, len(g.tiles)-w-1, len(g.tiles[0])-h-1,
 		func(x, y int) bool {
 			return g.isTileRectOfCode(x, y, w, h, TILE_UNFILLED, true) &&
 				(g.countTileCodesInRect(x-1, y-1, w+2, h+2, TILE_WALL) > w ||

@@ -129,12 +129,12 @@ func testGen() {
 	gen.Test(100, 40, rnd)
 	key := ""
 	for key != "ESCAPE" {
-		gen.Generate(100, 40, rnd)
+		gen_map := gen.Generate(100, 40, rnd)
 		cw.ClearScreen()
-		for x := range gen.Tiles {
-			for y := range gen.Tiles[x] {
+		for x := range gen_map {
+			for y := range gen_map[x] {
 				rune := '?'
-				switch gen.Tiles[x][y].Code {
+				switch gen_map[x][y].Code {
 				case roomgrowinggenerator.TILE_UNFILLED:
 					cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
 					rune = '.'
@@ -154,7 +154,7 @@ func testGen() {
 					cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
 					rune = '<'
 				}
-				if !gen.Tiles[x][y].Connected && gen.Tiles[x][y].Code == roomgrowinggenerator.TILE_FLOOR {
+				if !gen_map[x][y].Connected && gen_map[x][y].Code == roomgrowinggenerator.TILE_FLOOR {
 					cw.InverseStyle()
 				}
 				cw.PutChar(rune, x, y)

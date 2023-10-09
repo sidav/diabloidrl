@@ -45,7 +45,7 @@ func (g *Generator) placeVaultAt(v []string, x, y int) {
 }
 
 func (g *Generator) selectCoordsToPlaceVault(v []string, inside bool) (bool, int, int) {
-	return g.selectRandomCoordsFromRect(0, 0, len(g.Tiles)-len(v), len(g.Tiles[0])-len(v[0]),
+	return g.selectRandomCoordsFromRect(0, 0, len(g.tiles)-len(v), len(g.tiles[0])-len(v[0]),
 		func(x, y int) bool {
 			if inside {
 				return g.canInsideVaultBePlacedAt(v, x, y)

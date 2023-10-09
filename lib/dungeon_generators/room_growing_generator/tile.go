@@ -11,17 +11,17 @@ const (
 	TILE_ENTRYPOINT
 )
 
-type tile struct {
+type Tile struct {
 	Code      tileCode
 	roomId    int
 	Connected bool // for connectivity check
 }
 
-func (t *tile) isConnective() bool {
+func (t *Tile) isConnective() bool {
 	return t.Code == TILE_FLOOR || t.Code == TILE_DOOR || t.Code == TILE_ENTRYPOINT
 }
 
-func (t *tile) setByVaultChar(vc rune) {
+func (t *Tile) setByVaultChar(vc rune) {
 	switch vc {
 	case charAny:
 		// do nothing
@@ -39,7 +39,7 @@ func (t *tile) setByVaultChar(vc rune) {
 }
 
 // Safe to delete. Used only for debug output
-func (t *tile) getRune() rune {
+func (t *Tile) getRune() rune {
 	switch t.Code {
 	case TILE_UNFILLED:
 		return '.'

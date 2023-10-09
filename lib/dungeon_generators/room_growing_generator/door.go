@@ -35,7 +35,7 @@ func (g *Generator) wereRoomsAlreadyConnected(id1, id2 int) bool {
 }
 
 func (g *Generator) isTileGoodForDoor(x, y int, shouldConnectRooms bool) bool {
-	if x <= 0 || x >= len(g.Tiles)-1 || y <= 0 || y >= len(g.Tiles[x])-1 {
+	if x <= 0 || x >= len(g.tiles)-1 || y <= 0 || y >= len(g.tiles[x])-1 {
 		return false
 	}
 	if !(g.areCoordsInBounds(x, y) && g.tileAt(x, y).Code == TILE_WALL) {
@@ -58,7 +58,7 @@ func (g *Generator) isTileGoodForDoor(x, y int, shouldConnectRooms bool) bool {
 }
 
 func (g *Generator) addRandomDoor() {
-	placed, dx, dy := g.selectRandomCoordsFromRect(1, 1, len(g.Tiles)-2, len(g.Tiles[0])-2,
+	placed, dx, dy := g.selectRandomCoordsFromRect(1, 1, len(g.tiles)-2, len(g.tiles[0])-2,
 		func(x, y int) bool {
 			if g.isTileGoodForDoor(x, y, true) {
 				id1, id2 := g.getRoomIdsNear(x, y)
