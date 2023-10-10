@@ -14,7 +14,8 @@ import (
 )
 
 const (
-	LOG_SIZE = 5
+	LOG_SIZE    = 5
+	ticksInTurn = 10
 )
 
 var (
@@ -39,7 +40,7 @@ func main() {
 	cw = &tcell_console_wrapper.ConsoleWrapper{}
 	cw.Init()
 	defer cw.Close()
-	testGen()
+	// testGen()
 	log.Init(LOG_SIZE)
 
 	cw.SetStyle(tcell.ColorRed, tcell.ColorBlack)

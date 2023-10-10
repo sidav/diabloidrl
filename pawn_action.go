@@ -2,6 +2,29 @@ package main
 
 import "diabloidrl/static"
 
+const (
+	pActionWait = iota
+	pActionAttack
+)
+
+type PawnAction struct {
+	actionCode                          int
+	actionDone                          bool
+	ticksBeforeAction, ticksAfterAction int
+}
+
+func (pa *PawnAction) updateDelays() {
+	if pa.ticksBeforeAction > 0 {
+		pa.ticksBeforeAction--
+	} else if pa.ticksAfterAction > 0 {
+		pa.ticksAfterAction--
+	}
+}
+
+func (pa *PawnAction) canActionOccurNow() bool {
+	return pa.ticksBeforeAction == 0 && !pa.actionDone
+}
+
 func (p *pawn) regainHitpoints(hp int) {
 	p.hitpoints += hp
 	if p.hitpoints > p.getMaxHitpoints() {
