@@ -79,11 +79,16 @@ func (d *dungeon) placeChestAtRandom() {
 	x, y := -1, -1
 	for !(d.isInBounds(x, y)) {
 		x, y := rnd.RandInRange(1, len(d.dmap)-2), rnd.RandInRange(1, len(d.dmap[0])-2)
-		if d.getTileAt(x, y).code == tileFloor {
+		if d.getTileAt(x, y).code == tileFloor && d.areNeighbouringTilesOnlyOfCode(x, y, tileFloor) {
 			d.getTileAt(x, y).code = tileChest
 			return
 		} else {
 			x, y = -1, -1
 		}
 	}
+}
+
+func (d *dungeon) areNeighbouringTilesOnlyOfCode(x, y, code int) bool {
+	return d.getTileAt(x-1, y).code == code && d.getTileAt(x+1, y).code == code &&
+		d.getTileAt(x, y-1).code == code && d.getTileAt(x, y+1).code == code
 }

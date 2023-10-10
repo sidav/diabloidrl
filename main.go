@@ -45,9 +45,9 @@ func main() {
 	cw.SetStyle(tcell.ColorRed, tcell.ColorBlack)
 	gen := roomgrowinggenerator.Generator{
 		MinRoomSide: 3,
-		MaxRoomSide: 15,
+		MaxRoomSide: 25,
 	} // bspdung.Generator{Cw: cw}
-	generatedMap := gen.Generate(80, 25, rnd)
+	generatedMap := gen.Generate(80, 50, rnd)
 	cw.ReadKey()
 
 	dung := &dungeon{}
