@@ -28,6 +28,9 @@ func (r *rendererStruct) renderGameMainScreen(dung *dungeon) {
 	if hei > 15+LOG_SIZE+r.uiH {
 		r.uiH = (hei - 15 - LOG_SIZE)
 	}
+	if r.uiH > 13 {
+		r.uiH = 13
+	}
 	r.view.SetViewportSize(wid, hei-LOG_SIZE-r.uiH)
 	r.view.SetViewportRealCenter(player.x, player.y)
 	forceDraw := true
