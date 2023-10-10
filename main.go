@@ -1,7 +1,8 @@
 package main
 
 import (
-	bspdung "diabloidrl/lib/dungeon_generators/bsp_dung"
+	// bspdung "diabloidrl/lib/dungeon_generators/bsp_dung"
+	roomgrowinggenerator "diabloidrl/lib/dungeon_generators/room_growing_generator"
 	"diabloidrl/lib/game_log"
 	"diabloidrl/lib/random"
 	"diabloidrl/lib/random/pcgrandom"
@@ -38,11 +39,15 @@ func main() {
 	cw = &tcell_console_wrapper.ConsoleWrapper{}
 	cw.Init()
 	defer cw.Close()
+	testGen()
 	log.Init(LOG_SIZE)
 
 	cw.SetStyle(tcell.ColorRed, tcell.ColorBlack)
-	gen := bspdung.Generator{Cw: cw}
-	charmap := gen.Generate(rnd, 80, 25)
+	gen := roomgrowinggenerator.Generator{
+		MinRoomSide: 3,
+		MaxRoomSide: 25,
+	} // bspdung.Generator{Cw: cw}
+	generatedMap := gen.Generate(80, 50, rnd)
 	cw.ReadKey()
 
 	dung := &dungeon{}
@@ -56,7 +61,7 @@ func main() {
 		inv: &inventory{},
 	}
 	player.playerStats.setDefaultStats()
-	dung.init(charmap)
+	dung.init(generatedMap)
 	log.AppendMessage("Init complete")
 	// log.AppendMessage("Dice test: " + random.NewDice(2, 6, 1).GetDescriptionString())
 	game(dung, pc)

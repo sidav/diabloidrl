@@ -2,8 +2,8 @@ package roomgrowinggenerator
 
 func (g *Generator) checkConnectivity() bool {
 selectAnyPassableTile:
-	for x := range g.Tiles {
-		for y := range g.Tiles[x] {
+	for x := range g.tiles {
+		for y := range g.tiles[x] {
 			if g.tileAt(x, y).isConnective() {
 				g.tileAt(x, y).Connected = true
 				break selectAnyPassableTile
@@ -19,8 +19,8 @@ selectAnyPassableTile:
 
 func (g *Generator) iterateConnectivity() bool {
 	change := false
-	for x := 1; x < len(g.Tiles)-1; x++ {
-		for y := 1; y < len(g.Tiles[x])-1; y++ {
+	for x := 1; x < len(g.tiles)-1; x++ {
+		for y := 1; y < len(g.tiles[x])-1; y++ {
 			if g.tileAt(x, y).isConnective() && !g.tileAt(x, y).Connected {
 				if g.tileAt(x-1, y).Connected || g.tileAt(x+1, y).Connected || g.tileAt(x, y-1).Connected || g.tileAt(x, y+1).Connected {
 					g.tileAt(x, y).Connected = true
@@ -33,8 +33,8 @@ func (g *Generator) iterateConnectivity() bool {
 }
 
 func (g *Generator) anyUncheckedTilesPresent() bool {
-	for x := range g.Tiles {
-		for y := range g.Tiles[x] {
+	for x := range g.tiles {
+		for y := range g.tiles[x] {
 			if !g.tileAt(x, y).Connected && g.tileAt(x, y).isConnective() {
 				return true
 			}

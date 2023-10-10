@@ -1,7 +1,5 @@
 package roomgrowinggenerator
 
-import "fmt"
-
 type tileCode uint8
 
 const (
@@ -9,33 +7,39 @@ const (
 	TILE_WALL
 	TILE_FLOOR
 	TILE_DOOR
+	TILE_FENCE
+	TILE_ENTRYPOINT
 )
 
-type tile struct {
+type Tile struct {
 	Code      tileCode
-	Connected bool // for interconnectedness check
+	roomId    int
+	Connected bool // for connectivity check
 }
 
-func (t *tile) isConnective() bool {
-	return t.Code == TILE_FLOOR || t.Code == TILE_DOOR
+func (t *Tile) isConnective() bool {
+	return t.Code == TILE_FLOOR || t.Code == TILE_DOOR || t.Code == TILE_ENTRYPOINT
 }
 
-func (t *tile) setByVaultChar(vc rune) {
+func (t *Tile) setByVaultChar(vc rune) {
 	switch vc {
-	case ' ':
+	case charAny:
 		// do nothing
-	case '#':
+	case charWall:
 		t.Code = TILE_WALL
-	case '+':
+	case charDoor:
 		t.Code = TILE_DOOR
-	case '.':
+	case charFloor, charFloorOldId:
 		t.Code = TILE_FLOOR
+	case charFence:
+		t.Code = TILE_FENCE
 	default:
-		panic(fmt.Sprintf("No such char: %v", vc))
+		dbgPanic("No such char: %s", string(vc))
 	}
 }
 
-func (t *tile) getRune() rune {
+// Safe to delete. Used only for debug output
+func (t *Tile) getRune() rune {
 	switch t.Code {
 	case TILE_UNFILLED:
 		return '.'

@@ -122,17 +122,19 @@ func putGraphFromArray(arr []int, sum int) {
 
 func testGen() {
 	gen := roomgrowinggenerator.Generator{
-		MinRoomSide: 4,
+		MinRoomSide: 3,
+		MaxRoomSide: 20,
 	}
-	gen.Init()
+	roomgrowinggenerator.SetDebugCw(cw)
+	gen.Test(100, 40, rnd)
 	key := ""
 	for key != "ESCAPE" {
-		gen.Generate(80, 40, rnd)
+		gen_map := gen.Generate(100, 40, rnd)
 		cw.ClearScreen()
-		for x := range gen.Tiles {
-			for y := range gen.Tiles[x] {
+		for x := range gen_map {
+			for y := range gen_map[x] {
 				rune := '?'
-				switch gen.Tiles[x][y].Code {
+				switch gen_map[x][y].Code {
 				case roomgrowinggenerator.TILE_UNFILLED:
 					cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
 					rune = '.'
@@ -143,10 +145,16 @@ func testGen() {
 					cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
 					rune = '+'
 				case roomgrowinggenerator.TILE_WALL:
-					cw.SetStyle(tcell.ColorBlack, tcell.ColorDarkRed)
-					rune = '#'
+					cw.SetStyle(tcell.ColorDarkMagenta, tcell.ColorDarkRed)
+					rune = ' '
+				case roomgrowinggenerator.TILE_FENCE:
+					cw.SetStyle(tcell.ColorDarkCyan, tcell.ColorBlack)
+					rune = '"'
+				case roomgrowinggenerator.TILE_ENTRYPOINT:
+					cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
+					rune = '<'
 				}
-				if !gen.Tiles[x][y].Connected && gen.Tiles[x][y].Code != roomgrowinggenerator.TILE_UNFILLED {
+				if !gen_map[x][y].Connected && gen_map[x][y].Code == roomgrowinggenerator.TILE_FLOOR {
 					cw.InverseStyle()
 				}
 				cw.PutChar(rune, x, y)
