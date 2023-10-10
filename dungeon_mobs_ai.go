@@ -2,17 +2,17 @@ package main
 
 import "diabloidrl/lib/calculations"
 
-func (d *dungeon) actForPawn(p *pawn) {
+func (d *dungeon) aiActForPawn(p *pawn) {
 	if d.isTileInPlayerFOV(p.x, p.y) {
-		p.mob.currentState = mobStateAttacking
-		p.mob.stateTimeout = 10
-	} else if p.mob.stateTimeout > 0 {
-		p.mob.stateTimeout--
-		if p.mob.stateTimeout == 0 {
-			p.mob.currentState = mobStateIdle
+		p.mob.aiState = mobStateAttacking
+		p.mob.AiStateTimeout = 10
+	} else if p.mob.AiStateTimeout > 0 {
+		p.mob.AiStateTimeout--
+		if p.mob.AiStateTimeout == 0 {
+			p.mob.aiState = mobStateIdle
 		}
 	}
-	switch p.mob.currentState {
+	switch p.mob.aiState {
 	case mobStateIdle:
 		return
 	case mobStateAttacking:
@@ -23,7 +23,7 @@ func (d *dungeon) actForPawn(p *pawn) {
 		} else {
 			vx, vy := d.getStepForPawnToPawn(p, player)
 			if vx == 0 && vy == 0 {
-				p.spendTime(10)
+				p.action.setWait(ticksInTurn)
 				return
 			}
 			d.DefaultMoveActionWithPawn(p, vx, vy)

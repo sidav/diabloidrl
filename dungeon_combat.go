@@ -42,7 +42,6 @@ func (d *dungeon) doMeleeHit(attacker, defender *pawn) {
 		}
 	}
 	renderer.addAnimationAt(animTypeHit, defender.x, defender.y, true)
-	attacker.spendTime(attacker.getHitTime())
 }
 
 func (d *dungeon) doRangedAttack(attacker, defender *pawn) {
@@ -75,5 +74,4 @@ func (d *dungeon) doRangedAttack(attacker, defender *pawn) {
 	}
 	renderer.addTwoCoordAnimationAt(animTypeHitscanProjectile, attacker.x, attacker.y, defender.x, defender.y, true)
 	renderer.addAnimationAt(animTypeShot, defender.x, defender.y, false)
-	attacker.spendTime(attacker.getHitTime())
 }

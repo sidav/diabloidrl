@@ -3,7 +3,7 @@ package main
 func game(d *dungeon, pc *playerController) {
 	for !stopGame {
 		d.exploreAroundPlayer()
-		for !stopGame && d.canPawnAct(player) {
+		for !stopGame && player.action.ended() {
 			pc.act(d)
 		}
 		d.clearDeadPawns()
@@ -17,10 +17,9 @@ func game(d *dungeon, pc *playerController) {
 			p.cleanupStatusEffects()
 			d.applyPassiveStatusEffects(p)
 
-			if p.canActInTicks > 0 {
-				p.canActInTicks--
-			} else if !p.isPlayer() {
-				d.actForPawn(p)
+			p.action.updateDelays()
+			if !p.isPlayer() && p.action.ended() {
+				d.aiActForPawn(p)
 			}
 		}
 		d.currentTick++

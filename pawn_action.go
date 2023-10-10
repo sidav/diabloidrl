@@ -21,33 +21,18 @@ func (pa *PawnAction) updateDelays() {
 	}
 }
 
+func (pa *PawnAction) setWait(delay int) {
+	pa.actionCode = pActionWait
+	pa.ticksBeforeAction = 0
+	pa.ticksAfterAction = delay
+}
+
+func (pa *PawnAction) ended() bool {
+	return pa.ticksBeforeAction == 0 && pa.ticksAfterAction == 0
+}
+
 func (pa *PawnAction) canActionOccurNow() bool {
 	return pa.ticksBeforeAction == 0 && !pa.actionDone
-}
-
-func (p *pawn) regainHitpoints(hp int) {
-	p.hitpoints += hp
-	if p.hitpoints > p.getMaxHitpoints() {
-		p.hitpoints = p.getMaxHitpoints()
-	}
-}
-
-func (p *pawn) acquireExperience(exp int) {
-	if p.isPlayer() {
-		levelBefore := p.playerStats.getExperienceLevel()
-		p.playerStats.experience += exp
-		if p.playerStats.getExperienceLevel() > levelBefore {
-			p.playerStats.skillPoints++
-			p.hitpoints = p.getMaxHitpoints()
-		}
-	}
-}
-
-func (p *pawn) spendTime(ticks int) {
-	if p.isPlayer() {
-		p.playerStats.lastActionTicks += ticks
-	}
-	p.canActInTicks += ticks
 }
 
 func (p *pawn) useFlask() {
@@ -69,5 +54,4 @@ func (p *pawn) useFlask() {
 	})
 	p.flaskCharges--
 	p.canUseFlaskInTicks += flask.asFlask.CooldownBetweenSips
-	p.spendTime(10)
 }

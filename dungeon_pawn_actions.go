@@ -9,7 +9,6 @@ func (d *dungeon) movePawn(p *pawn, vx, vy int) bool {
 	if d.isInBounds(newX, newY) && d.isTilePassableAndEmpty(newX, newY) {
 		p.x += vx
 		p.y += vy
-		p.spendTime(p.getMovementTime())
 		return true
 	}
 	return false
@@ -20,12 +19,10 @@ func (d *dungeon) DefaultMoveActionWithPawn(p *pawn, vx, vy int) bool {
 	if d.getTileAt(newX, newY).code == tileChest && !d.getTileAt(newX, newY).isOpened {
 		d.getTileAt(newX, newY).isOpened = true
 		d.generateRandomDrop(newX, newY, rnd.RandInRange(1, 3))
-		p.spendTime(10)
 		return false
 	}
 	if d.getTileAt(newX, newY).code == tileDoor && !d.getTileAt(newX, newY).isOpened {
 		d.getTileAt(newX, newY).isOpened = true
-		p.spendTime(10)
 		return false
 	}
 	pawnAtCoords := d.getPawnAt(newX, newY)
@@ -39,7 +36,6 @@ func (d *dungeon) DefaultMoveActionWithPawn(p *pawn, vx, vy int) bool {
 func (d *dungeon) pickUpItemWithPawn(p *pawn) {
 	items := d.getItemsAt(p.x, p.y)
 	if len(items) > 0 && p.inv != nil {
-		p.spendTime(10)
 		p.inv.addItemToStash(items[0])
 		d.removeItem(items[0])
 		return

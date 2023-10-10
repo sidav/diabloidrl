@@ -10,9 +10,9 @@ const (
 )
 
 type mobStruct struct {
-	stats        *static.MobStats
-	currentState uint8
-	stateTimeout uint8 // counted in actions, not in ticks
+	stats          *static.MobStats
+	aiState        uint8
+	AiStateTimeout uint8 // counted in actions, not in ticks
 }
 
 func (ms *mobStruct) initFromStatic(s *static.MobStats) {

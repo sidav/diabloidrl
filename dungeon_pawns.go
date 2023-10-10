@@ -26,13 +26,6 @@ func (d *dungeon) clearDeadPawns() {
 	}
 }
 
-func (d *dungeon) canPawnAct(p *pawn) bool {
-	if p.canActInTicks < 0 {
-		panic("wat")
-	}
-	return p.canActInTicks == 0
-}
-
 func (d *dungeon) getPawnAt(x, y int) *pawn {
 	if player.x == x && player.y == y {
 		return player

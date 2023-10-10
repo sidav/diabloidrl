@@ -43,7 +43,7 @@ func (pc *playerController) defaultMode(dung *dungeon) {
 	case "EXIT": // ctrl+c
 		stopGame = true
 	case "s":
-		player.spendTime(player.getMovementTime())
+		player.action.setWait(ticksInTurn)
 	case "g":
 		pc.pickUp(dung)
 	case "o":
