@@ -8,6 +8,22 @@ import (
 )
 
 func (d *dungeon) init(generatedMap [][]roomgrowinggenerator.Tile) {
+	const testMapSize = 12
+	generatedMap = make([][]roomgrowinggenerator.Tile, testMapSize)
+	for x := range generatedMap {
+		generatedMap[x] = make([]roomgrowinggenerator.Tile, testMapSize)
+	}
+	for x := 0; x < testMapSize; x++ {
+		for y := 0; y < testMapSize; y++ {
+			if x == 0 || x == testMapSize-1 || y == 0 || y == testMapSize-1 {
+				generatedMap[x][y].Code = roomgrowinggenerator.TILE_WALL
+			} else {
+				generatedMap[x][y].Code = roomgrowinggenerator.TILE_FLOOR
+			}
+		}
+	}
+	generatedMap[testMapSize/2][testMapSize/2].Code = roomgrowinggenerator.TILE_ENTRYPOINT
+
 	d.initFromCharMap(generatedMap)
 	for i := 0; i < 3; i++ {
 		d.placeChestAtRandom()
