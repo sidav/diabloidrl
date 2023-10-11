@@ -2,43 +2,32 @@ package main
 
 func (d *dungeon) executePawnAction(p *pawn) {
 	switch p.action.actionCode {
-	case pActionAttack:
-	case pActionMove:
-		d.DefaultMoveActionWithPawn(p)
 	case pActionWait:
+		// do nothing
+	case pActionBasicMeleeAttack:
+		d.performMeleeHitAction(p)
+	case pActionMove:
+		d.performMoveActionWithPawn(p)
 	default:
 		panic("executePawnAction(p *pawn): No such action...")
 	}
 	p.action.markExecuted()
 }
 
-func (d *dungeon) movePawn(p *pawn, vx, vy int) bool {
-	newX, newY := p.x+vx, p.y+vy
-	if d.isInBounds(newX, newY) && d.isTilePassableAndEmpty(newX, newY) {
-		p.x += vx
-		p.y += vy
-		return true
-	}
-	return false
-}
-
-func (d *dungeon) DefaultMoveActionWithPawn(p *pawn) bool {
+func (d *dungeon) performMoveActionWithPawn(p *pawn) {
 	newX, newY := p.x+p.action.x, p.y+p.action.y
 	if d.getTileAt(newX, newY).code == tileChest && !d.getTileAt(newX, newY).isOpened {
 		d.getTileAt(newX, newY).isOpened = true
 		d.generateRandomDrop(newX, newY, rnd.RandInRange(1, 3))
-		return false
+		return
 	}
 	if d.getTileAt(newX, newY).code == tileDoor && !d.getTileAt(newX, newY).isOpened {
 		d.getTileAt(newX, newY).isOpened = true
-		return false
+		return
 	}
-	pawnAtCoords := d.getPawnAt(newX, newY)
-	if pawnAtCoords != nil {
-		d.doMeleeHit(p, pawnAtCoords)
-		return false
+	if d.isInBounds(newX, newY) && d.isTilePassableAndEmpty(newX, newY) {
+		p.x, p.y = newX, newY
 	}
-	return d.movePawn(p, p.action.x, p.action.y)
 }
 
 func (d *dungeon) pickUpItemWithPawn(p *pawn) {

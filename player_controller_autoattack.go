@@ -25,7 +25,11 @@ func (pc *playerController) doAutoAttackTurn(dung *dungeon) {
 	if player.getAttackRange() > 1 && player.getAttackRange() >= distanceToTarget {
 		dung.doRangedAttack(player, selectedMob)
 	} else {
-		vx, vy := dung.getStepForPawnToPawn(player, selectedMob)
-		player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
+		if dung.arePawnsTouching(player, selectedMob) {
+			player.action.set(pActionBasicMeleeAttack, 0, player.getHitTime(), selectedMob.x, selectedMob.y)
+		} else {
+			vx, vy := dung.getStepForPawnToPawn(player, selectedMob)
+			player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
+		}
 	}
 }

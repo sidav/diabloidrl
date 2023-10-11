@@ -14,7 +14,9 @@ func (pc *playerController) act(dung *dungeon) {
 	switch pc.mode {
 	case pcModeDefault:
 		pc.defaultMode(dung)
-		player.playerStats.lastActionTicks = 0
+		if !player.action.isEmpty() {
+			player.playerStats.lastActionTicks = player.action.ticksBeforeAction + player.action.ticksAfterAction
+		}
 		dung.resetPlayerPath()
 	case pcModeAutoexplore:
 		pc.autoexploreMode(dung)
@@ -29,7 +31,12 @@ func (pc *playerController) defaultMode(dung *dungeon) {
 	vx, vy := pc.keyToStep(key)
 	// log.AppendMessagef("vx, vy %d, %d", vx, vy)
 	if vx != 0 || vy != 0 {
-		player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
+		mobAtCoords := dung.getPawnAt(player.x+vx, player.y+vy)
+		if mobAtCoords != nil && dung.arePawnsTouching(player, mobAtCoords) {
+			player.action.set(pActionBasicMeleeAttack, 0, player.getHitTime(), mobAtCoords.x, mobAtCoords.y)
+		} else {
+			player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
+		}
 
 		itms := dung.getItemsAt(player.x, player.y)
 		if len(itms) == 1 {

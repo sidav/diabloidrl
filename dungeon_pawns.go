@@ -1,9 +1,17 @@
 package main
 
+import (
+	intmath "diabloidrl/lib/calculations/int_math"
+)
+
 func (d *dungeon) addPawnAt(p *pawn, x, y int) {
 	p.hitpoints = p.getMaxHitpoints()
 	p.x, p.y = x, y
 	d.pawns = append(d.pawns, p)
+}
+
+func (d *dungeon) arePawnsTouching(p1, p2 *pawn) bool {
+	return intmath.IntAbs(p1.x-p2.x) <= 1 && intmath.IntAbs(p1.y-p2.y) <= 1
 }
 
 func (d *dungeon) clearDeadPawns() {

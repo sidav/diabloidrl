@@ -5,7 +5,8 @@ import "diabloidrl/static"
 const (
 	pActionWait = iota
 	pActionMove
-	pActionAttack
+	pActionBasicMeleeAttack
+	pActionBasicRangedAttack
 )
 
 type PawnAction struct {
@@ -23,11 +24,23 @@ func (pa *PawnAction) set(code, delBefore, delAfter, vx, vy int) {
 	pa.actionDone = false
 }
 
+func (pa *PawnAction) reset() {
+	pa.set(pActionWait, 0, 10, 0, 0)
+}
+
 func (pa *PawnAction) setVector(vx, vy int) {
 	pa.x, pa.y = vx, vy
 }
 
+func (pa *PawnAction) getCoords() (int, int) {
+	return pa.x, pa.y
+}
+
 func (pa *PawnAction) updateDelays() {
+	if pa.actionCode != pActionWait && pa.ticksBeforeAction == 0 && pa.ticksAfterAction == 0 {
+		// just a failsafe to double-check the logic
+		panic("Non-updated action delay")
+	}
 	if pa.ticksBeforeAction > 0 {
 		pa.ticksBeforeAction--
 	} else if pa.ticksAfterAction > 0 {
@@ -39,7 +52,7 @@ func (pa *PawnAction) markExecuted() {
 	pa.actionDone = true
 }
 
-func (pa *PawnAction) ended() bool {
+func (pa *PawnAction) isEmpty() bool {
 	return pa.ticksBeforeAction == 0 && pa.ticksAfterAction == 0
 }
 

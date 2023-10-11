@@ -49,7 +49,7 @@ func main() {
 		MaxRoomSide: 25,
 	} // bspdung.Generator{Cw: cw}
 	generatedMap := gen.Generate(80, 50, rnd)
-	cw.ReadKey()
+	// cw.ReadKey()
 
 	dung := &dungeon{}
 	renderer.attachToDungeonStruct(dung)

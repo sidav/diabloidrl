@@ -3,10 +3,9 @@ package main
 func game(d *dungeon, pc *playerController) {
 	for !stopGame {
 		d.exploreAroundPlayer()
-		for !stopGame && player.action.ended() {
+		for !stopGame && player.action.isEmpty() {
 			pc.act(d)
 		}
-		d.clearDeadPawns()
 		for _, p := range d.pawns {
 			if p.getRegenCooldown() != 0 && d.currentTick%p.getRegenCooldown() == 0 {
 				p.regainHitpoints(1)
@@ -18,15 +17,19 @@ func game(d *dungeon, pc *playerController) {
 			d.applyPassiveStatusEffects(p)
 
 			p.action.updateDelays()
-			if !p.isPlayer() && p.action.ended() {
-				d.aiActForPawn(p)
-			}
 		}
 		for _, p := range d.pawns {
+			if !p.isPlayer() && p.hitpoints <= 0 {
+				continue
+			}
 			if p.action.canActionOccurNow() {
 				d.executePawnAction(p)
 			}
+			if !p.isPlayer() && p.action.isEmpty() {
+				d.aiActForPawn(p)
+			}
 		}
+		d.clearDeadPawns()
 		d.currentTick++
 	}
 }

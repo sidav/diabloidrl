@@ -5,14 +5,21 @@ import (
 	"diabloidrl/static"
 )
 
-func (d *dungeon) doMeleeHit(attacker, defender *pawn) {
+func (d *dungeon) performMeleeHitAction(attacker *pawn) {
+	hitX, hitY := attacker.action.getCoords()
+	renderer.addAnimationAt(animTypePawnIsActing, attacker.x, attacker.y, false)
+	renderer.addAnimationAt(animTypeHit, hitX, hitY, true)
+	defender := d.getPawnAt(hitX, hitY)
+	if defender == nil {
+		return
+	}
+
 	if attacker == defender {
 		panic("Something is very wrong (hitting)")
 	}
 	toHitRoll := attacker.getHitDice().Roll(rnd)
 	toEvadeRoll := rnd.Rand(defender.getEvasion())
 	// log.AppendMessagef("To-hit %d <-> EV %d", toHitRoll, toEvadeRoll)
-	renderer.addAnimationAt(animTypePawnIsActing, attacker.x, attacker.y, false)
 	if toHitRoll < toEvadeRoll {
 		log.AppendMessagef("%s evaded the attack!", defender.getName())
 	} else {
@@ -41,7 +48,6 @@ func (d *dungeon) doMeleeHit(attacker, defender *pawn) {
 			}
 		}
 	}
-	renderer.addAnimationAt(animTypeHit, defender.x, defender.y, true)
 }
 
 func (d *dungeon) doRangedAttack(attacker, defender *pawn) {
