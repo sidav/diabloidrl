@@ -8,11 +8,14 @@ const (
 
 type playerController struct {
 	mode uint8
+
+	prevX, prevY int
 }
 
 func (pc *playerController) act(dung *dungeon) {
 	switch pc.mode {
 	case pcModeDefault:
+		pc.showItemsHereIfNeeded(dung)
 		pc.defaultMode(dung)
 		if !player.action.isEmpty() {
 			player.playerStats.lastActionTicks = player.action.ticksBeforeAction + player.action.ticksAfterAction
@@ -36,14 +39,6 @@ func (pc *playerController) defaultMode(dung *dungeon) {
 			player.action.set(pActionBasicMeleeAttack, 0, player.getHitTime(), mobAtCoords.x, mobAtCoords.y)
 		} else {
 			player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
-		}
-
-		itms := dung.getItemsAt(player.x, player.y)
-		if len(itms) == 1 {
-			log.AppendMessagef("You see here %s.", itms[0].getName())
-		}
-		if len(itms) > 1 {
-			log.AppendMessagef("You see here %d items", len(itms))
 		}
 		return
 	}
@@ -85,6 +80,22 @@ func (pc *playerController) pickUp(d *dungeon) {
 		d.pickUpItemWithPawn(player)
 	} else {
 		log.AppendMessage("There is nothing here to pick up.")
+	}
+}
+
+func (pc *playerController) showItemsHereIfNeeded(dung *dungeon) {
+	px, py := player.getCoords()
+	if pc.prevX == px && pc.prevY == py {
+		return
+	}
+	pc.prevX = px
+	pc.prevY = py
+	itms := dung.getItemsAt(px, py)
+	if len(itms) == 1 {
+		log.AppendMessagef("You see here %s.", itms[0].getName())
+	}
+	if len(itms) > 1 {
+		log.AppendMessagef("You see here %d items", len(itms))
 	}
 }
 
