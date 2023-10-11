@@ -1,17 +1,11 @@
 package main
 
-import (
-	intmath "diabloidrl/lib/calculations/int_math"
-)
+import "diabloidrl/lib/calculations"
 
 func (d *dungeon) addPawnAt(p *pawn, x, y int) {
 	p.hitpoints = p.getMaxHitpoints()
 	p.x, p.y = x, y
 	d.pawns = append(d.pawns, p)
-}
-
-func (d *dungeon) arePawnsTouching(p1, p2 *pawn) bool {
-	return intmath.IntAbs(p1.x-p2.x) <= 1 && intmath.IntAbs(p1.y-p2.y) <= 1
 }
 
 func (d *dungeon) clearDeadPawns() {
@@ -34,13 +28,27 @@ func (d *dungeon) clearDeadPawns() {
 	}
 }
 
+func (d *dungeon) arePawnsTouching(p1, p2 *pawn) bool {
+	s1 := p1.getSize()
+	s2 := p2.getSize()
+	return calculations.AreRectsInTaxicabRange(p1.x, p1.y, s1, s1, p2.x, p2.y, s2, s2, 1)
+}
+
 func (d *dungeon) getPawnAt(x, y int) *pawn {
-	if player.x == x && player.y == y {
-		return player
-	}
+	// if player.x == x && player.y == y {
+	// 	return player
+	// }
 	for _, m := range d.pawns {
-		if m.x == x && m.y == y {
-			return m
+		if m.getSize() <= 1 {
+			if m.x == x && m.y == y {
+				return m
+			}
+		} else {
+			xDist := x - m.x
+			yDist := y - m.y
+			if xDist >= 0 && xDist < m.mob.stats.Size && yDist >= 0 && yDist < m.mob.stats.Size {
+				return m
+			}
 		}
 	}
 	return nil

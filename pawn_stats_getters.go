@@ -5,6 +5,13 @@ import (
 	"diabloidrl/static"
 )
 
+func (p *pawn) getSize() int {
+	if p.isPlayer() {
+		return 1
+	}
+	return p.mob.stats.Size
+}
+
 func (p *pawn) getMaxHitpoints() int {
 	maxHp := 0
 	if p.isPlayer() {

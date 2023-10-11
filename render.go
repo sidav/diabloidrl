@@ -161,7 +161,8 @@ func (r *rendererStruct) renderPawn(d *dungeon, p *pawn, inverse bool) {
 			for i := range p.mob.stats.AsciiPic {
 				for j := range p.mob.stats.AsciiPic[i] {
 					chr := rune(p.mob.stats.AsciiPic[i][j])
-					cw.PutChar(chr, x+j-p.mob.stats.Size/2, y+i-p.mob.stats.Size/2)
+					cw.PutChar(chr, x+j, y+i)
+					// cw.PutChar(chr, x+j-p.mob.stats.Size/2, y+i-p.mob.stats.Size/2)
 				}
 			}
 		}
