@@ -4,13 +4,27 @@ import "diabloidrl/static"
 
 const (
 	pActionWait = iota
+	pActionMove
 	pActionAttack
 )
 
 type PawnAction struct {
 	actionCode                          int
+	x, y                                int // target
 	actionDone                          bool
 	ticksBeforeAction, ticksAfterAction int
+}
+
+func (pa *PawnAction) set(code, delBefore, delAfter, vx, vy int) {
+	pa.actionCode = code
+	pa.ticksBeforeAction = delBefore
+	pa.ticksAfterAction = delAfter
+	pa.x, pa.y = vx, vy
+	pa.actionDone = false
+}
+
+func (pa *PawnAction) setVector(vx, vy int) {
+	pa.x, pa.y = vx, vy
 }
 
 func (pa *PawnAction) updateDelays() {
@@ -21,10 +35,8 @@ func (pa *PawnAction) updateDelays() {
 	}
 }
 
-func (pa *PawnAction) setWait(delay int) {
-	pa.actionCode = pActionWait
-	pa.ticksBeforeAction = 0
-	pa.ticksAfterAction = delay
+func (pa *PawnAction) markExecuted() {
+	pa.actionDone = true
 }
 
 func (pa *PawnAction) ended() bool {

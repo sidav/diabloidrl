@@ -26,6 +26,6 @@ func (pc *playerController) doAutoAttackTurn(dung *dungeon) {
 		dung.doRangedAttack(player, selectedMob)
 	} else {
 		vx, vy := dung.getStepForPawnToPawn(player, selectedMob)
-		dung.DefaultMoveActionWithPawn(player, vx, vy)
+		player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
 	}
 }

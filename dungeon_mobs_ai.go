@@ -19,14 +19,14 @@ func (d *dungeon) aiActForPawn(p *pawn) {
 		if p.getAttackRange() > 1 && d.isTileInPlayerFOV(p.x, p.y) &&
 			p.getAttackRange() >= calculations.GetApproxDistFromTo(p.x, p.y, player.x, player.y) {
 
-			d.doRangedAttack(p, player)
+			// d.doRangedAttack(p, player)
 		} else {
 			vx, vy := d.getStepForPawnToPawn(p, player)
 			if vx == 0 && vy == 0 {
-				p.action.setWait(ticksInTurn)
+				p.action.set(pActionWait, 0, ticksInTurn, vx, vy)
 				return
 			}
-			d.DefaultMoveActionWithPawn(p, vx, vy)
+			p.action.set(pActionMove, 0, p.getMovementTime(), vx, vy)
 		}
 	}
 }

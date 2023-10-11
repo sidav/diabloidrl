@@ -29,7 +29,8 @@ func (pc *playerController) defaultMode(dung *dungeon) {
 	vx, vy := pc.keyToStep(key)
 	// log.AppendMessagef("vx, vy %d, %d", vx, vy)
 	if vx != 0 || vy != 0 {
-		dung.DefaultMoveActionWithPawn(player, vx, vy)
+		player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
+
 		itms := dung.getItemsAt(player.x, player.y)
 		if len(itms) == 1 {
 			log.AppendMessagef("You see here %s.", itms[0].getName())
@@ -43,7 +44,7 @@ func (pc *playerController) defaultMode(dung *dungeon) {
 	case "EXIT": // ctrl+c
 		stopGame = true
 	case "s":
-		player.action.setWait(ticksInTurn)
+		player.action.set(pActionWait, 0, ticksInTurn, 0, 0)
 	case "g":
 		pc.pickUp(dung)
 	case "o":

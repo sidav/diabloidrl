@@ -20,7 +20,7 @@ func (pc *playerController) autoexploreMode(dung *dungeon) {
 		return
 	}
 	dung.dmap[player.x][player.y].wasOnPlayerPath = true
-	dung.DefaultMoveActionWithPawn(player, vx, vy)
+	player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
 }
 
 func (pc *playerController) getNextAutoexploreStep(dung *dungeon) (int, int) {

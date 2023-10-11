@@ -1,7 +1,15 @@
 package main
 
 func (d *dungeon) executePawnAction(p *pawn) {
-
+	switch p.action.actionCode {
+	case pActionAttack:
+	case pActionMove:
+		d.DefaultMoveActionWithPawn(p)
+	case pActionWait:
+	default:
+		panic("executePawnAction(p *pawn): No such action...")
+	}
+	p.action.markExecuted()
 }
 
 func (d *dungeon) movePawn(p *pawn, vx, vy int) bool {
@@ -14,8 +22,8 @@ func (d *dungeon) movePawn(p *pawn, vx, vy int) bool {
 	return false
 }
 
-func (d *dungeon) DefaultMoveActionWithPawn(p *pawn, vx, vy int) bool {
-	newX, newY := p.x+vx, p.y+vy
+func (d *dungeon) DefaultMoveActionWithPawn(p *pawn) bool {
+	newX, newY := p.x+p.action.x, p.y+p.action.y
 	if d.getTileAt(newX, newY).code == tileChest && !d.getTileAt(newX, newY).isOpened {
 		d.getTileAt(newX, newY).isOpened = true
 		d.generateRandomDrop(newX, newY, rnd.RandInRange(1, 3))
@@ -30,7 +38,7 @@ func (d *dungeon) DefaultMoveActionWithPawn(p *pawn, vx, vy int) bool {
 		d.doMeleeHit(p, pawnAtCoords)
 		return false
 	}
-	return d.movePawn(p, vx, vy)
+	return d.movePawn(p, p.action.x, p.action.y)
 }
 
 func (d *dungeon) pickUpItemWithPawn(p *pawn) {

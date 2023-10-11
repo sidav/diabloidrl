@@ -22,6 +22,11 @@ func game(d *dungeon, pc *playerController) {
 				d.aiActForPawn(p)
 			}
 		}
+		for _, p := range d.pawns {
+			if p.action.canActionOccurNow() {
+				d.executePawnAction(p)
+			}
+		}
 		d.currentTick++
 	}
 }
