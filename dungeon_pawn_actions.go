@@ -25,7 +25,7 @@ func (d *dungeon) performMoveActionWithPawn(p *pawn) {
 		d.getTileAt(newX, newY).isOpened = true
 		return
 	}
-	if d.isInBounds(newX, newY) && d.isTilePassableAndEmpty(newX, newY) {
+	if d.isTilePassableForPawn(newX, newY, p) {
 		p.x, p.y = newX, newY
 	}
 }

@@ -3,15 +3,17 @@ package astar
 const (
 	DIAGONAL_COST             = 14
 	STRAIGHT_COST             = 10
-	HEURISTIC_MULTIPLIER      = 10
 	DEFAULT_PATHFINDING_STEPS = 175 // Increase in case of stupid pathfinding. Decrease in case of lag.
 )
 
-func heuristicCost(fromx, fromy, tox, toy int, diagonalsAllowed bool) int {
-	if diagonalsAllowed {
+func (aspf *AStarPathfinder) heuristicCostToTargetFrom(fromx, fromy int) int {
+	const heuristicMultiplier = 10
+	tox := aspf.toX + aspf.toW/2
+	toy := aspf.toY + aspf.toH/2
+	if aspf.DiagonalMoveAllowed {
 		return (fromx-tox)*(fromx-tox) + (fromy-toy)*(fromy-toy)
 	}
-	return HEURISTIC_MULTIPLIER * (abs(tox-fromx) + abs(toy-fromy))
+	return heuristicMultiplier * (abs(tox-fromx) + abs(toy-fromy))
 }
 
 type AStarPathfinder struct {
@@ -20,6 +22,7 @@ type AStarPathfinder struct {
 	// private
 	targetCell *Cell
 	toX, toY   int
+	toW, toH   int
 }
 
 func (aspf *AStarPathfinder) areCoordsValid(x, y int) bool {
@@ -36,15 +39,13 @@ func (aspf *AStarPathfinder) getIndexOfCellWithLowestF(openList []*Cell) int {
 	return cheapestCellIndex
 }
 
-func (aspf *AStarPathfinder) FindPath(costFunc func(int, int) int, fromx, fromy, tox, toy int) *Cell {
-	aspf.toX = tox
-	aspf.toY = toy
+func (aspf *AStarPathfinder) FindPath(costFunc func(int, int) int, fromx, fromy, tox, toy, toW, toH int) *Cell {
+	aspf.toX, aspf.toY, aspf.toW, aspf.toH = tox, toy, toW, toH
 	aspf.targetCell = nil
 	openList := make([]*Cell, 0)
 	closedList := make([]*Cell, 0)
 	var currentCell *Cell
 	total_steps := 0
-	targetReached := false
 	totalCells := aspf.MapWidth * aspf.MapHeight
 
 	maxSearchDepth := DEFAULT_PATHFINDING_STEPS
@@ -53,10 +54,10 @@ func (aspf *AStarPathfinder) FindPath(costFunc func(int, int) int, fromx, fromy,
 	}
 
 	// step 1
-	origin := &Cell{X: fromx, Y: fromy, h: heuristicCost(fromx, fromy, tox, toy, aspf.DiagonalMoveAllowed)}
+	origin := &Cell{X: fromx, Y: fromy, h: aspf.heuristicCostToTargetFrom(fromx, fromy)}
 	openList = append(openList, origin)
 	// step 2
-	for !targetReached {
+	for {
 		// sub-step 2a:
 		currentCellIndex := aspf.getIndexOfCellWithLowestF(openList)
 		currentCell = openList[currentCellIndex]
@@ -81,7 +82,6 @@ func (aspf *AStarPathfinder) FindPath(costFunc func(int, int) int, fromx, fromy,
 			}
 		}
 	}
-	return nil
 }
 
 func (aspf *AStarPathfinder) analyzeNeighbors(curCell *Cell, openlist *[]*Cell, closedlist *[]*Cell, costFunc func(int, int) int, targetX, targetY int) {
@@ -100,7 +100,6 @@ func (aspf *AStarPathfinder) analyzeNeighbors(curCell *Cell, openlist *[]*Cell, 
 						continue // ignore it
 					}
 				}
-				// TODO: add actual "cost to move there" from costMap
 				if (i * j) != 0 { // the Cell under consideration is lying diagonally
 					cost = DIAGONAL_COST * costFunc(x, y)
 				} else {
@@ -113,8 +112,8 @@ func (aspf *AStarPathfinder) analyzeNeighbors(curCell *Cell, openlist *[]*Cell, 
 						curNeighbor.setG(cost)
 					}
 				} else {
-					curNeighbor = &Cell{X: x, Y: y, parent: curCell, h: heuristicCost(x, y, targetX, targetY, aspf.DiagonalMoveAllowed)}
-					if x == aspf.toX && y == aspf.toY {
+					curNeighbor = &Cell{X: x, Y: y, parent: curCell, h: aspf.heuristicCostToTargetFrom(x, y)}
+					if areCoordsInRect(x, y, aspf.toX, aspf.toY, aspf.toW, aspf.toH) {
 						aspf.targetCell = curNeighbor
 						return
 					}

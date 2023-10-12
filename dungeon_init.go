@@ -54,14 +54,15 @@ func (d *dungeon) init(generatedMap [][]roomgrowinggenerator.Tile) {
 }
 
 func (d *dungeon) initNewPawnByStats(stats *static.MobStats) {
-	x, y := 0, 0
-	for !d.isTilePassableAndEmpty(x, y) {
-		x, y = rnd.RandInRange(1, len(d.dmap)-2), rnd.RandInRange(1, len(d.dmap[0])-2)
-	}
 	m := &pawn{
 		mob: &mobStruct{},
 	}
 	m.mob.initFromStatic(stats)
+
+	x, y := -1, -1
+	for !d.isTilePassableForPawn(x, y, m) {
+		x, y = rnd.RandInRange(1, len(d.dmap)-2), rnd.RandInRange(1, len(d.dmap[0])-2)
+	}
 	d.addPawnAt(m, x, y)
 }
 

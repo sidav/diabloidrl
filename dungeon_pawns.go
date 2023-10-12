@@ -1,6 +1,8 @@
 package main
 
-import "diabloidrl/lib/calculations"
+import (
+	"diabloidrl/lib/calculations"
+)
 
 func (d *dungeon) addPawnAt(p *pawn, x, y int) {
 	p.hitpoints = p.getMaxHitpoints()

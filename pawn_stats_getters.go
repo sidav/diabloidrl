@@ -9,6 +9,9 @@ func (p *pawn) getSize() int {
 	if p.isPlayer() {
 		return 1
 	}
+	if p.mob.stats.Size == 0 {
+		return 1
+	}
 	return p.mob.stats.Size
 }
 

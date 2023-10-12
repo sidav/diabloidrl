@@ -33,11 +33,12 @@ func (d *dungeon) isTilePassableAndEmpty(x, y int) bool {
 }
 
 func (d *dungeon) isTilePassableForPawn(x, y int, p *pawn) bool {
-	if p.isPlayer() || p.mob.stats.Size <= 1 {
+	size := p.getSize()
+	if size <= 1 {
 		return d.isTilePassableAndEmpty(x, y)
 	} else {
-		for i := x - 1; i <= x+1; i++ {
-			for j := y - 1; j <= y+1; j++ {
+		for i := x; i < x+size; i++ {
+			for j := y; j < y+size; j++ {
 				if !d.isTilePassable(i, j) {
 					return false
 				}

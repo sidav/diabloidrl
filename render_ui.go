@@ -13,7 +13,7 @@ func (r *rendererStruct) renderUI(dung *dungeon) {
 		sphereW--
 	}
 	cw.ResetStyle()
-	cw.PutStringf(sphereW, uiTopYCoord, "T: %d (%d)", dung.currentTick, player.playerStats.lastActionTicks)
+	cw.PutStringf(sphereW, uiTopYCoord, "T: %d (%d), Player at (%d, %d)", dung.currentTick, player.playerStats.lastActionTicks, player.x, player.y)
 	if player.inv.getItemInSlot(invSlotFlask) != nil {
 		if player.canUseFlaskInTicks == 0 {
 			cw.PutStringf(sphereW, uiTopYCoord, "Q: use flask (%d/%d charges)", player.flaskCharges, player.getMaxFlaskCharges())
