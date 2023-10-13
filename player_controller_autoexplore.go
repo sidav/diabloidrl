@@ -41,7 +41,7 @@ func (pc *playerController) shouldAutoexplorePause(dung *dungeon) bool {
 		log.AppendMessagef("%s spotted!", dung.getAllPawnsInPlayerFOV(true)[0].getName())
 		return true
 	}
-	px, py := player.getCoords()
+	px, py := player.GetCoords()
 	sight := player.getVisionRadius()
 	for x := px - sight; x <= px+sight; x++ {
 		for y := py - sight; y <= py+sight; y++ {

@@ -33,7 +33,7 @@ func (d *dungeon) isTilePassableAndEmpty(x, y int) bool {
 }
 
 func (d *dungeon) isTilePassableForPawn(x, y int, p *pawn) bool {
-	size := p.getSize()
+	size := p.GetSize()
 	if size <= 1 {
 		return d.isTilePassableAndEmpty(x, y)
 	} else {

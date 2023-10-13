@@ -18,7 +18,7 @@ func (d *dungeon) clearDeadPawns() {
 			if p.hitpoints <= -p.getMaxHitpoints()/4 {
 				log.AppendMessagef("%s explodes into gore!", p.getName())
 				player.acquireExperience(2 * p.mob.stats.GivesExperience)
-				d.placeGoreAround(p.getCoords())
+				d.placeGoreAround(p.GetCoords())
 				renderer.addAnimationAt(animTypeGibs, p.x, p.y, false)
 			} else {
 				log.AppendMessagef("%s drops dead.", p.getName())
@@ -31,8 +31,8 @@ func (d *dungeon) clearDeadPawns() {
 }
 
 func (d *dungeon) arePawnsTouching(p1, p2 *pawn) bool {
-	s1 := p1.getSize()
-	s2 := p2.getSize()
+	s1 := p1.GetSize()
+	s2 := p2.GetSize()
 	return calculations.AreRectsInTaxicabRange(p1.x, p1.y, s1, s1, p2.x, p2.y, s2, s2, 1)
 }
 
@@ -41,7 +41,7 @@ func (d *dungeon) getPawnAt(x, y int) *pawn {
 	// 	return player
 	// }
 	for _, m := range d.pawns {
-		if m.getSize() <= 1 {
+		if m.GetSize() <= 1 {
 			if m.x == x && m.y == y {
 				return m
 			}

@@ -10,11 +10,12 @@ import (
 )
 
 type rendererStruct struct {
-	view         util.Viewport
-	dung         *dungeon
-	uiH          int
-	currentFrame int
-	animations   []*animation
+	view           util.Viewport
+	dung           *dungeon
+	uiH            int
+	currentFrame   int
+	animations     []*animation
+	attackedCoords [][2]int
 }
 
 func (r *rendererStruct) attachToDungeonStruct(dung *dungeon) {
@@ -34,6 +35,7 @@ func (r *rendererStruct) renderGameMainScreen(dung *dungeon) {
 	r.view.SetViewportSize(wid, hei-LOG_SIZE-r.uiH)
 	r.view.SetViewportRealCenter(player.x, player.y)
 	forceDraw := true
+	r.updateAttackedTiles()
 	for forceDraw || len(r.animations) > 0 {
 		forceDraw = false
 		cw.ClearScreen()
@@ -70,6 +72,28 @@ func (r *rendererStruct) renderGameMainScreen(dung *dungeon) {
 			time.Sleep(10 * time.Millisecond)
 		}
 	}
+}
+
+func (r *rendererStruct) updateAttackedTiles() {
+	// clear
+	r.attackedCoords = nil
+	for _, p := range r.dung.pawns {
+		if p.action.actionCode == pActionSpecialMeleeAttack {
+			attackedTiles := p.action.attackPattern.GetAttackCoords(p, p.action.x, p.action.y)
+			for i := range attackedTiles {
+				r.attackedCoords = append(r.attackedCoords, [2]int{attackedTiles[i][0], attackedTiles[i][1]})
+			}
+		}
+	}
+}
+
+func (r *rendererStruct) areCoordsAttacked(x, y int) bool {
+	for i := range r.attackedCoords {
+		if r.attackedCoords[i][0] == x && r.attackedCoords[i][1] == y {
+			return true
+		}
+	}
+	return false
 }
 
 func (r *rendererStruct) drawMap(dung *dungeon) {
@@ -129,6 +153,9 @@ func (r *rendererStruct) drawTile(dung *dungeon, x, y int) {
 	if inverse || t.wasOnPlayerPath {
 		cw.InverseStyle()
 	}
+	if r.areCoordsAttacked(realX, realY) {
+		cw.SetStyle(color, tcell.ColorDarkRed)
+	}
 	cw.PutChar(chr, x, y)
 
 }
@@ -143,6 +170,9 @@ func (r *rendererStruct) renderPawn(d *dungeon, p *pawn, inverse bool) {
 	if d.playerFOVMap[p.x][p.y] && r.view.AreRealCoordsInViewport(p.x, p.y) {
 		if p.isPlayer() {
 			cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
+			if r.areCoordsAttacked(p.x, p.y) {
+				cw.SetStyle(tcell.ColorBlack, tcell.ColorDarkRed)
+			}
 			x, y := r.view.RealCoordsToScreenCoords(p.x, p.y)
 			cw.PutChar('@', x, y)
 		} else {

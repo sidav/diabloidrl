@@ -5,7 +5,7 @@ import (
 	"diabloidrl/static"
 )
 
-func (p *pawn) getSize() int {
+func (p *pawn) GetSize() int {
 	if p.isPlayer() {
 		return 1
 	}

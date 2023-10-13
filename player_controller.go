@@ -74,7 +74,7 @@ func (pc *playerController) defaultMode(dung *dungeon) {
 }
 
 func (pc *playerController) pickUp(d *dungeon) {
-	itms := d.getItemsAt(player.getCoords())
+	itms := d.getItemsAt(player.GetCoords())
 	if len(itms) > 0 {
 		log.AppendMessagef("You pick up %s.", itms[0].getName())
 		d.pickUpItemWithPawn(player)
@@ -84,7 +84,7 @@ func (pc *playerController) pickUp(d *dungeon) {
 }
 
 func (pc *playerController) showItemsHereIfNeeded(dung *dungeon) {
-	px, py := player.getCoords()
+	px, py := player.GetCoords()
 	if pc.prevX == px && pc.prevY == py {
 		return
 	}

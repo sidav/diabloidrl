@@ -8,10 +8,14 @@ func (d *dungeon) executePawnAction(p *pawn) {
 		d.performMeleeHitAction(p)
 	case pActionMove:
 		d.performMoveActionWithPawn(p)
+	case pActionSpecialMeleeAttack:
 	default:
 		panic("executePawnAction(p *pawn): No such action...")
 	}
 	p.action.markExecuted()
+	if p.action.isEmpty() {
+		p.action.reset()
+	}
 }
 
 func (d *dungeon) performMoveActionWithPawn(p *pawn) {

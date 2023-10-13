@@ -15,11 +15,11 @@ func (d *dungeon) getDigitalLineOfSightBetween(fx, fy, tx, ty int) []primitives.
 func (d *dungeon) getStepForPawnToPawn(mover, targetPawn *pawn) (int, int) {
 	targetX, targetY := targetPawn.x, targetPawn.y
 	targetW, targetH := 1, 1
-	if mover.getSize() > 1 {
-		targetX -= mover.getSize() - 1
-		targetY -= mover.getSize() / 2
-		targetW = mover.getSize()
-		targetH = mover.getSize()
+	if mover.GetSize() > 1 {
+		targetX -= mover.GetSize() - 1
+		targetY -= mover.GetSize() / 2
+		targetW = mover.GetSize()
+		targetH = mover.GetSize()
 	}
 	cell := d.pathfinder.FindPath(
 		func(x, y int) int {

@@ -13,7 +13,7 @@ type pawn struct {
 	canUseFlaskInTicks int
 }
 
-func (p *pawn) getCoords() (int, int) {
+func (p *pawn) GetCoords() (int, int) {
 	return p.x, p.y
 }
 
