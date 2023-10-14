@@ -12,20 +12,29 @@ const (
 )
 
 type PawnAction struct {
-	actionCode                          int
+	code                                int
 	x, y                                int // target
-	actionDone                          bool
+	wasDone                             bool
 	ticksBeforeAction, ticksAfterAction int
-	attackData                          *static.Attack
+	attackData                          *static.AttackSkill
 }
 
 func (pa *PawnAction) set(code, delBefore, delAfter, vx, vy int) {
-	pa.actionCode = code
+	pa.code = code
 	pa.ticksBeforeAction = delBefore
 	pa.ticksAfterAction = delAfter
 	pa.x, pa.y = vx, vy
 	pa.attackData = nil
-	pa.actionDone = false
+	pa.wasDone = false
+}
+
+func (pa *PawnAction) setAttack(attacker *pawn, adata *static.AttackSkill, delBefore, delAfter int, targetPawn *pawn) {
+	pa.code = pActionAttack
+	pa.attackData = adata
+	pa.ticksBeforeAction = delBefore
+	pa.ticksAfterAction = delAfter
+	pa.x, pa.y = pa.attackData.Pattern.GetAimAt(attacker, targetPawn)
+	pa.wasDone = false
 }
 
 func (pa *PawnAction) reset() {
@@ -41,10 +50,10 @@ func (pa *PawnAction) getCoords() (int, int) {
 }
 
 func (pa *PawnAction) updateDelays() {
-	if pa.actionCode != pActionWait && pa.ticksBeforeAction == 0 && pa.ticksAfterAction == 0 {
+	if pa.code != pActionWait && pa.ticksBeforeAction == 0 && pa.ticksAfterAction == 0 {
 		// just a failsafe to double-check the logic
 		if false {
-			panic("Non-updated action delay for code " + strconv.Itoa(pa.actionCode))
+			panic("Non-updated action delay for code " + strconv.Itoa(pa.code))
 		}
 	}
 	if pa.ticksBeforeAction > 0 {
@@ -55,7 +64,7 @@ func (pa *PawnAction) updateDelays() {
 }
 
 func (pa *PawnAction) markExecuted() {
-	pa.actionDone = true
+	pa.wasDone = true
 }
 
 func (pa *PawnAction) isEmpty() bool {
@@ -63,7 +72,7 @@ func (pa *PawnAction) isEmpty() bool {
 }
 
 func (pa *PawnAction) canActionOccurNow() bool {
-	return pa.ticksBeforeAction == 0 && !pa.actionDone
+	return pa.ticksBeforeAction == 0 && !pa.wasDone
 }
 
 func (p *pawn) useFlask() {

@@ -78,8 +78,8 @@ func (r *rendererStruct) updateAttackedTiles() {
 	// clear
 	r.attackedCoords = nil
 	for _, p := range r.dung.pawns {
-		if p.action.actionCode == pActionAttack {
-			attackedTiles := p.action.attackData.Pattern.GetAttackCoords(p, p.action.x, p.action.y)
+		if p.action.code == pActionAttack {
+			attackedTiles := p.action.attackData.Pattern.GetAttackedCoords(p, p.action.x, p.action.y)
 			for i := range attackedTiles {
 				r.attackedCoords = append(r.attackedCoords, [2]int{attackedTiles[i][0], attackedTiles[i][1]})
 			}
@@ -167,7 +167,7 @@ func (r *rendererStruct) drawTile(dung *dungeon, x, y int) {
 // }
 
 func (r *rendererStruct) renderPawn(d *dungeon, p *pawn, inverse bool) {
-	if d.playerFOVMap[p.x][p.y] && r.view.AreRealCoordsInViewport(p.x, p.y) {
+	if d.isPawnInPlayerFov(p) && r.view.AreRealCoordsInViewport(p.x, p.y) {
 		if p.isPlayer() {
 			cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
 			if r.areCoordsAttacked(p.x, p.y) {

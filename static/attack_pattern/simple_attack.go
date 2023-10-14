@@ -21,7 +21,7 @@ func (SimpleAttack) CanBePerformedOn(attacker, target ActorForPattern) bool {
 		targetX, targetY, targetW, targetW, attackerW)
 }
 
-func (SimpleAttack) GetAttackCoords(attacker ActorForPattern, targetX, targetY int) [][2]int {
+func (SimpleAttack) GetAttackedCoords(attacker ActorForPattern, targetX, targetY int) [][2]int {
 	// attackerX, attackerY := attacker.GetCoords()
 	attackerW := attacker.GetSize()
 
@@ -34,7 +34,7 @@ func (SimpleAttack) GetAttackCoords(attacker ActorForPattern, targetX, targetY i
 	return coords
 }
 
-func (SimpleAttack) GetAimCoords(attacker, target ActorForPattern) (int, int) {
+func (SimpleAttack) GetAimAt(attacker, target ActorForPattern) (int, int) {
 	attackerX, attackerY := attacker.GetCoords()
 	attackerW := attacker.GetSize()
 	targetX, targetY := target.GetCoords()

@@ -36,8 +36,7 @@ func (pc *playerController) defaultMode(dung *dungeon) {
 	if vx != 0 || vy != 0 {
 		mobAtCoords := dung.getPawnAt(player.x+vx, player.y+vy)
 		if mobAtCoords != nil && pc.getAttackPattern().Pattern.CanBePerformedOn(player, mobAtCoords) {
-			player.action.set(pActionAttack, 0, player.getHitTime(), mobAtCoords.x, mobAtCoords.y)
-			player.action.attackData = pc.getAttackPattern()
+			player.action.setAttack(player, pc.getAttackPattern(), 0, player.getHitTime(), mobAtCoords)
 		} else {
 			player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
 		}

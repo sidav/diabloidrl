@@ -45,7 +45,7 @@ func (pc *playerController) shouldAutoexplorePause(dung *dungeon) bool {
 	sight := player.getVisionRadius()
 	for x := px - sight; x <= px+sight; x++ {
 		for y := py - sight; y <= py+sight; y++ {
-			if dung.isInBounds(x, y) && dung.playerFOVMap[x][y] &&
+			if dung.isInBounds(x, y) && dung.isTileInPlayerFOV(x, y) &&
 				dung.getTileAt(x, y).code == tileChest && !dung.getTileAt(x, y).isOpened {
 
 				log.AppendMessage("Unopened chest spotted!")

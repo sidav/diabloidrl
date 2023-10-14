@@ -5,7 +5,7 @@ import (
 )
 
 func (d *dungeon) aiActForPawn(p *pawn) {
-	if d.isTileInPlayerFOV(p.x, p.y) {
+	if d.isPawnInPlayerFov(p) {
 		p.mob.aiState = mobStateAttacking
 		p.mob.AiStateTimeout = 10
 	} else if p.mob.AiStateTimeout > 0 {
@@ -21,9 +21,7 @@ func (d *dungeon) aiActForPawn(p *pawn) {
 	case mobStateAttacking:
 		selectedAttack := d.selectMobAttackWhichLands(p)
 		if selectedAttack != nil {
-			targetX, targetY := selectedAttack.Pattern.GetAimCoords(p, player)
-			p.action.set(pActionAttack, p.getHitTime(), 0, targetX, targetY)
-			p.action.attackData = selectedAttack
+			p.action.setAttack(p, selectedAttack, p.getHitTime(), 0, player)
 			return
 		}
 		vx, vy := d.getStepForPawnToPawn(p, player)
@@ -35,7 +33,7 @@ func (d *dungeon) aiActForPawn(p *pawn) {
 	}
 }
 
-func (d *dungeon) selectMobAttackWhichLands(m *pawn) *static.Attack {
+func (d *dungeon) selectMobAttackWhichLands(m *pawn) *static.AttackSkill {
 	var candidates []int
 	for i := range m.mob.stats.Attacks {
 		if m.mob.stats.Attacks[i].Pattern.CanBePerformedOn(m, player) {

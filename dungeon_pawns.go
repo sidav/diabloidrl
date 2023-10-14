@@ -36,6 +36,18 @@ func (d *dungeon) arePawnsTouching(p1, p2 *pawn) bool {
 	return calculations.AreRectsInTaxicabRange(p1.x, p1.y, s1, s1, p2.x, p2.y, s2, s2, 1)
 }
 
+func (d *dungeon) isPawnInPlayerFov(p *pawn) bool {
+	pSize := p.GetSize()
+	if pSize <= 1 {
+		return d.isTileInPlayerFOV(p.GetCoords())
+	}
+	pSize--
+	return d.isTileInPlayerFOV(p.GetCoords()) ||
+		d.isTileInPlayerFOV(p.x+pSize, p.y+pSize) ||
+		d.isTileInPlayerFOV(p.x+pSize, p.y) ||
+		d.isTileInPlayerFOV(p.x, p.y+pSize)
+}
+
 func (d *dungeon) getPawnAt(x, y int) *pawn {
 	// if player.x == x && player.y == y {
 	// 	return player

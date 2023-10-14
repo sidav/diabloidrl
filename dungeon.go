@@ -88,7 +88,7 @@ func (d *dungeon) isAnyPawnInPlayerFOV(excludePlayer bool) bool {
 
 func (d *dungeon) getAllPawnsInPlayerFOV(excludePlayer bool) (ms []*pawn) {
 	for _, m := range d.pawns {
-		if d.playerFOVMap[m.x][m.y] && !(excludePlayer && m.isPlayer()) {
+		if d.isPawnInPlayerFov(m) && !(excludePlayer && m.isPlayer()) {
 			ms = append(ms, m)
 		}
 	}

@@ -11,7 +11,7 @@ type MobStats struct {
 	ToHit, Damage                        random.Dice
 	Evasion                              int
 	CritChancePercent, CritDamagePercent int
-	Attacks                              []*Attack
+	Attacks                              []*AttackSkill
 	AttackRange                          int // 0 for melee
 	RegenCooldown                        int
 	MovementTime                         int
@@ -119,7 +119,7 @@ var STableMobs = []*MobStats{
 		Size:         3,
 		MaxHitpoints: 15,
 		ToHit:        *random.NewDice(1, 6, 0),
-		Attacks: []*Attack{
+		Attacks: []*AttackSkill{
 			{
 				Pattern:             attackpattern.SimpleAttack{},
 				HitTimePercentage:   100,

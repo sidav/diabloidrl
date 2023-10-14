@@ -29,8 +29,7 @@ func (pc *playerController) doAutoAttackTurn(dung *dungeon) {
 	// } else {
 
 	if pc.getAttackPattern().Pattern.CanBePerformedOn(player, selectedMob) {
-		player.action.set(pActionAttack, 0, player.getHitTime(), selectedMob.x, selectedMob.y)
-		player.action.attackData = pc.getAttackPattern()
+		player.action.setAttack(player, pc.getAttackPattern(), 0, player.getHitTime(), selectedMob)
 	} else {
 		vx, vy := dung.getStepForPawnToPawn(player, selectedMob)
 		player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
@@ -38,8 +37,8 @@ func (pc *playerController) doAutoAttackTurn(dung *dungeon) {
 	// }
 }
 
-func (pc *playerController) getAttackPattern() *static.Attack {
-	return &static.Attack{
+func (pc *playerController) getAttackPattern() *static.AttackSkill {
+	return &static.AttackSkill{
 		Pattern:             attackpattern.SimpleAttack{},
 		HitTimePercentage:   100,
 		DamagePercentage:    100,

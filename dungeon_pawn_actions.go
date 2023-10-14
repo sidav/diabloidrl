@@ -1,7 +1,7 @@
 package main
 
 func (d *dungeon) executePawnAction(p *pawn) {
-	switch p.action.actionCode {
+	switch p.action.code {
 	case pActionWait:
 		// do nothing
 	case pActionAttack:
@@ -47,7 +47,7 @@ func (d *dungeon) performAttackAction(p *pawn) {
 	if p.action.attackData == nil {
 		panic("Attack data not set for attack action!")
 	}
-	acoords := p.action.attackData.Pattern.GetAttackCoords(p, p.action.x, p.action.y)
+	acoords := p.action.attackData.Pattern.GetAttackedCoords(p, p.action.x, p.action.y)
 	for i := range acoords {
 		d.performHitOnCoords(p, acoords[i][0], acoords[i][1], i == 0)
 	}
