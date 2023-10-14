@@ -35,8 +35,9 @@ func (pc *playerController) defaultMode(dung *dungeon) {
 	// log.AppendMessagef("vx, vy %d, %d", vx, vy)
 	if vx != 0 || vy != 0 {
 		mobAtCoords := dung.getPawnAt(player.x+vx, player.y+vy)
-		if mobAtCoords != nil && dung.arePawnsTouching(player, mobAtCoords) {
+		if mobAtCoords != nil && pc.getAttackPattern().Pattern.CanBePerformedOn(player, mobAtCoords) {
 			player.action.set(pActionAttack, 0, player.getHitTime(), mobAtCoords.x, mobAtCoords.y)
+			player.action.attackData = pc.getAttackPattern()
 		} else {
 			player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
 		}

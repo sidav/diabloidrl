@@ -44,6 +44,9 @@ func (d *dungeon) pickUpItemWithPawn(p *pawn) {
 }
 
 func (d *dungeon) performAttackAction(p *pawn) {
+	if p.action.attackData == nil {
+		panic("Attack data not set for attack action!")
+	}
 	acoords := p.action.attackData.Pattern.GetAttackCoords(p, p.action.x, p.action.y)
 	for i := range acoords {
 		d.performHitOnCoords(p, acoords[i][0], acoords[i][1], i == 0)
