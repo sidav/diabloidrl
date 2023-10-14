@@ -18,8 +18,11 @@ func (d *dungeon) getStepForPawnToPawn(mover, targetPawn *pawn) (int, int) {
 	if mover.GetSize() > 1 {
 		targetX -= mover.GetSize() - 1
 		targetY -= mover.GetSize() / 2
-		targetW = mover.GetSize()
-		targetH = mover.GetSize()
+		targetW = mover.GetSize() + targetPawn.GetSize() - 1
+		targetH = mover.GetSize() + targetPawn.GetSize() - 1
+	} else {
+		targetW = targetPawn.GetSize()
+		targetH = targetPawn.GetSize()
 	}
 	cell := d.pathfinder.FindPath(
 		func(x, y int) int {

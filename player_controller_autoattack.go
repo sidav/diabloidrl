@@ -24,9 +24,6 @@ func (pc *playerController) doAutoAttackTurn(dung *dungeon) {
 	if selectedMob == nil {
 		return
 	}
-	// if player.getAttackRange() > 1 && player.getAttackRange() >= distanceToTarget {
-	// 	dung.doRangedAttack(player, selectedMob)
-	// } else {
 
 	if pc.getAttackPattern().Pattern.CanBePerformedOn(player, selectedMob) {
 		player.action.setAttack(player, pc.getAttackPattern(), 0, player.getHitTime(), selectedMob)
