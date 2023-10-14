@@ -1,6 +1,9 @@
 package static
 
-import "diabloidrl/lib/random"
+import (
+	"diabloidrl/lib/random"
+	attackpattern "diabloidrl/static/attack_pattern"
+)
 
 type MobStats struct {
 	Name                                 string
@@ -8,6 +11,7 @@ type MobStats struct {
 	ToHit, Damage                        random.Dice
 	Evasion                              int
 	CritChancePercent, CritDamagePercent int
+	Attacks                              []*Attack
 	AttackRange                          int // 0 for melee
 	RegenCooldown                        int
 	MovementTime                         int
@@ -112,9 +116,17 @@ var STableMobs = []*MobStats{
 			"\\=0",
 			"/ \\",
 		},
-		Size:               3,
-		MaxHitpoints:       15,
-		ToHit:              *random.NewDice(1, 6, 0),
+		Size:         3,
+		MaxHitpoints: 15,
+		ToHit:        *random.NewDice(1, 6, 0),
+		Attacks: []*Attack{
+			{
+				Pattern:             attackpattern.SimpleAttack{},
+				HitTimePercentage:   100,
+				DamagePercentage:    100,
+				ToHitRollPercentage: 100,
+			},
+		},
 		Evasion:            2,
 		Damage:             *random.NewDice(1, 4, 0),
 		CritChancePercent:  1,
