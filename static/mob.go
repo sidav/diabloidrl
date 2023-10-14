@@ -126,6 +126,15 @@ var STableMobs = []*MobStats{
 				DamagePercentage:    100,
 				ToHitRollPercentage: 100,
 			},
+			{
+				Pattern: &attackpattern.LineAttack{
+					Size:   3,
+					Length: 6,
+				},
+				HitTimePercentage:   100,
+				DamagePercentage:    100,
+				ToHitRollPercentage: 100,
+			},
 		},
 		Evasion:            2,
 		Damage:             *random.NewDice(1, 4, 0),

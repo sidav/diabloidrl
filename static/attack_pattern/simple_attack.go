@@ -40,31 +40,15 @@ func (SimpleAttack) GetAimAt(attacker, target ActorForPattern) (int, int) {
 	targetX, targetY := target.GetCoords()
 	targetW := target.GetSize()
 
-	// var line []primitives.Point
-	// if attackerW%2 == 1 {
-	// 	line = primitives.GetLineOfLength(attackerX, attackerY, targetX, targetY, attackerW+1)
-	// } else {
-	// 	panic("Unimplemented")
-	// }
-	// last := line[len(line)-1]
-	// return last.X, last.Y
-
 	// Searching
-	bestX, bestY := attackerX-attackerW, attackerY-attackerW
-	bestDist := 10000
 	targetCenterX, targetCenterY := targetX+targetW/2, targetY+targetW/2
-	for x := attackerX - attackerW; x <= attackerX+attackerW; x++ {
-		for y := attackerY - attackerW; y <= attackerY+attackerW; y++ {
+	return findBestCoordsOnPerimeterByScore(attackerX-attackerW, attackerY-attackerW, attackerX+attackerW, attackerY+attackerW,
+		func(x, y int) int {
 			if calculations.AreTwoCellRectsOverlapping(x, y, attackerW, attackerW, attackerX, attackerY, attackerW, attackerW) {
-				continue
+				return -1000000
 			}
 			acx, acy := x+attackerW/2, y+attackerW/2
-			dist := calculations.SquareDistanceInt(targetCenterX, targetCenterY, acx, acy)
-			if dist < bestDist {
-				bestDist = dist
-				bestX, bestY = x, y
-			}
-		}
-	}
-	return bestX, bestY
+			return -calculations.SquareDistanceInt(targetCenterX, targetCenterY, acx, acy)
+		},
+	)
 }

@@ -1,5 +1,7 @@
 package attackpattern
 
+import "diabloidrl/lib/calculations/primitives"
+
 // import "diabloidrl/lib/calculations/primitives"
 
 func clearRepeatedCoords(arr [][2]int) [][2]int {
@@ -12,6 +14,16 @@ func clearRepeatedCoords(arr [][2]int) [][2]int {
 		}
 	}
 	return arr
+}
+
+func areCoordsOnLine(x, y, lfx, lfy, ltx, lty int) bool {
+	line := primitives.GetLine(lfx, lfy, ltx, lty)
+	for _, c := range line {
+		if c.X == x && c.Y == y {
+			return true
+		}
+	}
+	return false
 }
 
 func findBestCoordsOnPerimeterByScore(leftx, topy, rightx, bottomy int, score func(x, y int) int) (int, int) {
