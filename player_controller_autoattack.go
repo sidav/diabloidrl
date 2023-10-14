@@ -2,6 +2,8 @@ package main
 
 import (
 	"diabloidrl/lib/calculations"
+	"diabloidrl/static"
+	attackpattern "diabloidrl/static/attack_pattern"
 	"math"
 )
 
@@ -22,14 +24,21 @@ func (pc *playerController) doAutoAttackTurn(dung *dungeon) {
 	if selectedMob == nil {
 		return
 	}
-	if player.getAttackRange() > 1 && player.getAttackRange() >= distanceToTarget {
-		dung.doRangedAttack(player, selectedMob)
-	} else {
-		if dung.arePawnsTouching(player, selectedMob) {
-			player.action.set(pActionBasicMeleeAttack, 0, player.getHitTime(), selectedMob.x, selectedMob.y)
-		} else {
-			vx, vy := dung.getStepForPawnToPawn(player, selectedMob)
-			player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
-		}
+	// if player.getAttackRange() > 1 && player.getAttackRange() >= distanceToTarget {
+	// 	dung.doRangedAttack(player, selectedMob)
+	// } else {
+	adata := &static.Attack{
+		Pattern:             attackpattern.SimpleAttack{},
+		HitTimePercentage:   100,
+		DamagePercentage:    100,
+		ToHitRollPercentage: 100,
 	}
+	if adata.Pattern.CanBePerformedOn(player, selectedMob) {
+		player.action.set(pActionAttack, 0, player.getHitTime(), selectedMob.x, selectedMob.y)
+		player.action.attackData = adata
+	} else {
+		vx, vy := dung.getStepForPawnToPawn(player, selectedMob)
+		player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
+	}
+	// }
 }

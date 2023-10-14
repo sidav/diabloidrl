@@ -4,11 +4,10 @@ func (d *dungeon) executePawnAction(p *pawn) {
 	switch p.action.actionCode {
 	case pActionWait:
 		// do nothing
-	case pActionBasicMeleeAttack:
-		d.performMeleeHitAction(p)
+	case pActionAttack:
+		d.performAttackAction(p)
 	case pActionMove:
 		d.performMoveActionWithPawn(p)
-	case pActionSpecialMeleeAttack:
 	default:
 		panic("executePawnAction(p *pawn): No such action...")
 	}
@@ -42,4 +41,11 @@ func (d *dungeon) pickUpItemWithPawn(p *pawn) {
 		return
 	}
 	panic("Pick up failed")
+}
+
+func (d *dungeon) performAttackAction(p *pawn) {
+	acoords := p.action.attackData.Pattern.GetAttackCoords(p, p.action.x, p.action.y)
+	for i := range acoords {
+		d.performHitOnCoords(p, acoords[i][0], acoords[i][1], i == 0)
+	}
 }

@@ -1,6 +1,8 @@
 package main
 
-import "diabloidrl/lib/calculations"
+import (
+	"diabloidrl/static"
+)
 
 func (d *dungeon) aiActForPawn(p *pawn) {
 	if d.isTileInPlayerFOV(p.x, p.y) {
@@ -17,21 +19,31 @@ func (d *dungeon) aiActForPawn(p *pawn) {
 	case mobStateIdle:
 		return
 	case mobStateAttacking:
-		if p.getAttackRange() > 1 && d.isTileInPlayerFOV(p.x, p.y) &&
-			p.getAttackRange() >= calculations.GetApproxDistFromTo(p.x, p.y, player.x, player.y) {
-			p.action.set(pActionWait, 0, ticksInTurn, 0, 0)
-			// d.doRangedAttack(p, player)
-		} else {
-			if d.arePawnsTouching(p, player) {
-				p.action.set(pActionBasicMeleeAttack, p.getHitTime(), 0, player.x, player.y)
-				return
-			}
-			vx, vy := d.getStepForPawnToPawn(p, player)
-			if vx == 0 && vy == 0 {
-				p.action.set(pActionWait, 0, ticksInTurn, vx, vy)
-				return
-			}
-			p.action.set(pActionMove, 0, p.getMovementTime(), vx, vy)
+		selectedAttack := d.selectMobAttackWhichLands(p)
+		if selectedAttack != nil {
+			targetX, targetY := selectedAttack.Pattern.GetAimCoords(p, player)
+			p.action.set(pActionAttack, p.getHitTime(), 0, targetX, targetY)
+			p.action.attackData = selectedAttack
+			return
+		}
+		vx, vy := d.getStepForPawnToPawn(p, player)
+		if vx == 0 && vy == 0 {
+			p.action.set(pActionWait, 0, ticksInTurn, vx, vy)
+			return
+		}
+		p.action.set(pActionMove, 0, p.getMovementTime(), vx, vy)
+	}
+}
+
+func (d *dungeon) selectMobAttackWhichLands(m *pawn) *static.Attack {
+	var candidates []int
+	for i := range m.mob.stats.Attacks {
+		if m.mob.stats.Attacks[i].Pattern.CanBePerformedOn(m, player) {
+			candidates = append(candidates, i)
 		}
 	}
+	if len(candidates) == 0 {
+		return nil
+	}
+	return m.mob.stats.Attacks[candidates[rnd.Rand(len(candidates))]]
 }

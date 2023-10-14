@@ -78,8 +78,8 @@ func (r *rendererStruct) updateAttackedTiles() {
 	// clear
 	r.attackedCoords = nil
 	for _, p := range r.dung.pawns {
-		if p.action.actionCode == pActionSpecialMeleeAttack {
-			attackedTiles := p.action.attackPattern.GetAttackCoords(p, p.action.x, p.action.y)
+		if p.action.actionCode == pActionAttack {
+			attackedTiles := p.action.attackData.Pattern.GetAttackCoords(p, p.action.x, p.action.y)
 			for i := range attackedTiles {
 				r.attackedCoords = append(r.attackedCoords, [2]int{attackedTiles[i][0], attackedTiles[i][1]})
 			}

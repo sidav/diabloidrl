@@ -36,7 +36,7 @@ func (pc *playerController) defaultMode(dung *dungeon) {
 	if vx != 0 || vy != 0 {
 		mobAtCoords := dung.getPawnAt(player.x+vx, player.y+vy)
 		if mobAtCoords != nil && dung.arePawnsTouching(player, mobAtCoords) {
-			player.action.set(pActionBasicMeleeAttack, 0, player.getHitTime(), mobAtCoords.x, mobAtCoords.y)
+			player.action.set(pActionAttack, 0, player.getHitTime(), mobAtCoords.x, mobAtCoords.y)
 		} else {
 			player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
 		}

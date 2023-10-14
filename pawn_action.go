@@ -2,16 +2,13 @@ package main
 
 import (
 	"diabloidrl/static"
-	attackpattern "diabloidrl/static/attack_pattern"
 	"strconv"
 )
 
 const (
 	pActionWait = iota
 	pActionMove
-	pActionBasicMeleeAttack
-	pActionBasicRangedAttack
-	pActionSpecialMeleeAttack
+	pActionAttack
 )
 
 type PawnAction struct {
@@ -19,7 +16,7 @@ type PawnAction struct {
 	x, y                                int // target
 	actionDone                          bool
 	ticksBeforeAction, ticksAfterAction int
-	attackPattern                       attackpattern.AttackPattern
+	attackData                          *static.Attack
 }
 
 func (pa *PawnAction) set(code, delBefore, delAfter, vx, vy int) {
@@ -27,7 +24,7 @@ func (pa *PawnAction) set(code, delBefore, delAfter, vx, vy int) {
 	pa.ticksBeforeAction = delBefore
 	pa.ticksAfterAction = delAfter
 	pa.x, pa.y = vx, vy
-	pa.attackPattern = nil
+	pa.attackData = nil
 	pa.actionDone = false
 }
 

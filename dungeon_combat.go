@@ -1,13 +1,11 @@
 package main
 
 import (
-	"diabloidrl/lib/calculations"
 	"diabloidrl/static"
 )
 
-func (d *dungeon) performMeleeHitAction(attacker *pawn) {
-	hitX, hitY := attacker.action.getCoords()
-	renderer.addAnimationAt(animTypePawnIsActing, attacker.x, attacker.y, false)
+func (d *dungeon) performHitOnCoords(attacker *pawn, hitX, hitY int, beginningOfAnimation bool) {
+	renderer.addAnimationAt(animTypePawnIsActing, attacker.x, attacker.y, !beginningOfAnimation)
 	renderer.addAnimationAt(animTypeHit, hitX, hitY, true)
 	defender := d.getPawnAt(hitX, hitY)
 	if defender == nil {
@@ -15,7 +13,7 @@ func (d *dungeon) performMeleeHitAction(attacker *pawn) {
 	}
 
 	if attacker == defender {
-		panic("Something is very wrong (hitting)")
+		panic("Attacker hits itself!")
 	}
 	toHitRoll := attacker.getHitDice().Roll(rnd)
 	toEvadeRoll := rnd.Rand(defender.getEvasion())
@@ -50,34 +48,34 @@ func (d *dungeon) performMeleeHitAction(attacker *pawn) {
 	}
 }
 
-func (d *dungeon) doRangedAttack(attacker, defender *pawn) {
-	if attacker == defender {
-		panic("Something is very wrong (shooting)")
-	}
-	if calculations.GetApproxDistFromTo(attacker.x, attacker.y, defender.x, defender.y) > attacker.getAttackRange() {
-		panic("Range failure")
-	}
-	toHitRoll := attacker.getHitDice().Roll(rnd)
-	toEvadeRoll := rnd.Rand(defender.getEvasion())
+// func (d *dungeon) doRangedAttack(attacker, defender *pawn) {
+// 	if attacker == defender {
+// 		panic("Something is very wrong (shooting)")
+// 	}
+// 	if calculations.GetApproxDistFromTo(attacker.x, attacker.y, defender.x, defender.y) > attacker.getAttackRange() {
+// 		panic("Range failure")
+// 	}
+// 	toHitRoll := attacker.getHitDice().Roll(rnd)
+// 	toEvadeRoll := rnd.Rand(defender.getEvasion())
 
-	renderer.addAnimationAt(animTypePawnIsActing, attacker.x, attacker.y, false)
-	if toHitRoll < toEvadeRoll {
-		log.AppendMessagef("%s evaded the shot!", defender.getName())
-	} else {
-		damage := attacker.getDamageDice().Roll(rnd)
-		if rnd.Rand(100) < attacker.getCriticalChancePercent() {
-			perc := attacker.getCriticalDamagePercent()
-			log.AppendMessagef("Critical hit - %d%% damage!", perc)
-			damage = damage * perc / 100
-		}
-		defenseRoll := rnd.Rand(defender.getArmorClass())
-		if defenseRoll >= damage {
-			log.AppendMessagef("%s's shot did no damage.", attacker.getName())
-		} else {
-			defender.hitpoints -= damage
-			log.AppendMessagef("%s shot %s for %d damage.", attacker.getName(), defender.getName(), damage)
-		}
-	}
-	renderer.addTwoCoordAnimationAt(animTypeHitscanProjectile, attacker.x, attacker.y, defender.x, defender.y, true)
-	renderer.addAnimationAt(animTypeShot, defender.x, defender.y, false)
-}
+// 	renderer.addAnimationAt(animTypePawnIsActing, attacker.x, attacker.y, false)
+// 	if toHitRoll < toEvadeRoll {
+// 		log.AppendMessagef("%s evaded the shot!", defender.getName())
+// 	} else {
+// 		damage := attacker.getDamageDice().Roll(rnd)
+// 		if rnd.Rand(100) < attacker.getCriticalChancePercent() {
+// 			perc := attacker.getCriticalDamagePercent()
+// 			log.AppendMessagef("Critical hit - %d%% damage!", perc)
+// 			damage = damage * perc / 100
+// 		}
+// 		defenseRoll := rnd.Rand(defender.getArmorClass())
+// 		if defenseRoll >= damage {
+// 			log.AppendMessagef("%s's shot did no damage.", attacker.getName())
+// 		} else {
+// 			defender.hitpoints -= damage
+// 			log.AppendMessagef("%s shot %s for %d damage.", attacker.getName(), defender.getName(), damage)
+// 		}
+// 	}
+// 	renderer.addTwoCoordAnimationAt(animTypeHitscanProjectile, attacker.x, attacker.y, defender.x, defender.y, true)
+// 	renderer.addAnimationAt(animTypeShot, defender.x, defender.y, false)
+// }
