@@ -34,6 +34,7 @@ func (pa *PawnAction) setAttack(attacker *pawn, adata *static.AttackSkill, delBe
 	pa.ticksBeforeAction = delBefore
 	pa.ticksAfterAction = delAfter
 	pa.x, pa.y = pa.attackData.Pattern.GetAimAt(attacker, targetPawn)
+	log.AppendMessagef("ATTACK SELECTED: %d, %d; at %+v", pa.x, pa.y, pa.attackData.Pattern)
 	pa.wasDone = false
 }
 

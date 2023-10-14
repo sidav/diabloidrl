@@ -8,7 +8,7 @@ import (
 )
 
 func (d *dungeon) init(generatedMap [][]roomgrowinggenerator.Tile) {
-	const testMapSize = 12
+	const testMapSize = 24
 	generatedMap = make([][]roomgrowinggenerator.Tile, testMapSize)
 	for x := range generatedMap {
 		generatedMap[x] = make([]roomgrowinggenerator.Tile, testMapSize)
@@ -31,6 +31,7 @@ func (d *dungeon) init(generatedMap [][]roomgrowinggenerator.Tile) {
 	player.x, player.y = d.getEntrypointCoords()
 	d.addPawnAt(player, player.x, player.y)
 	totalMobs := len(generatedMap) * len(generatedMap[0]) / 75
+	totalMobs = 1
 	log.AppendMessagef("Total %d mobs.", totalMobs)
 	for i := 0; i < totalMobs; i++ {
 		rarity := 0
