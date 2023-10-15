@@ -12,13 +12,7 @@ type SimpleAttack struct {
 }
 
 func (SimpleAttack) CanBePerformedOn(attacker, target ActorForPattern) bool {
-	attackerX, attackerY := attacker.GetCoords()
-	attackerW := attacker.GetSize()
-	targetX, targetY := target.GetCoords()
-	targetW := target.GetSize()
-
-	return calculations.AreRectsInTaxicabRange(attackerX, attackerY, attackerW, attackerW,
-		targetX, targetY, targetW, targetW, attackerW)
+	return areActorsInTaxicabRange(attacker, target, attacker.GetSize())
 }
 
 func (SimpleAttack) GetAttackedCoords(attacker ActorForPattern, targetX, targetY int) [][2]int {

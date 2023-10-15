@@ -1,6 +1,9 @@
 package attackpattern
 
-import "diabloidrl/lib/calculations/primitives"
+import (
+	"diabloidrl/lib/calculations"
+	"diabloidrl/lib/calculations/primitives"
+)
 
 // import "diabloidrl/lib/calculations/primitives"
 
@@ -58,4 +61,17 @@ func findBestCoordsOnPerimeterByScore(leftx, topy, rightx, bottomy int, score fu
 		}
 	}
 	return bestX, bestY
+}
+
+func areCoordsInRect(x, y, rx, ry, rw, rh int) bool {
+	return calculations.AreCoordsInTileRect(x, y, rx, ry, rw, rh)
+}
+
+func areActorsInTaxicabRange(a1, a2 ActorForPattern, dist int) bool {
+	attackerX, attackerY := a1.GetCoords()
+	attackerW := a1.GetSize()
+	targetX, targetY := a2.GetCoords()
+	targetW := a2.GetSize()
+	return calculations.AreRectsInTaxicabRange(attackerX, attackerY, attackerW, attackerW,
+		targetX, targetY, targetW, targetW, dist)
 }
