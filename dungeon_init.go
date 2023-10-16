@@ -8,8 +8,38 @@ import (
 )
 
 func (d *dungeon) init(generatedMap [][]roomgrowinggenerator.Tile) {
+	d.initFromCharMap(generatedMap)
+	for i := 0; i < 3; i++ {
+		d.placeChestAtRandom()
+	}
+	player.x, player.y = d.getEntrypointCoords()
+	d.addPawnAt(player, player.x, player.y)
+	totalMobs := len(generatedMap) * len(generatedMap[0]) / 75
+	log.AppendMessagef("Total %d mobs.", totalMobs)
+	for i := 0; i < totalMobs; i++ {
+		rarity := 0
+		if i < totalMobs/6 {
+			rarity = 1
+		}
+		d.initNewPawnByStats(static.GenerateRandomMobBase(rnd, rarity))
+	}
+	d.playerExplorationDM = dijkstra_map.New(len(d.dmap), len(d.dmap[0]), dijkstra_map.AllNeighbours,
+		func(x, y int) bool {
+			return d.isTilePassable(x, y) || d.getTileAt(x, y).code == tileDoor
+		})
+	d.pathfinder = &astar.AStarPathfinder{
+		DiagonalMoveAllowed:       true,
+		ForceGetPath:              true,
+		ForceIncludeFinish:        true,
+		AutoAdjustDefaultMaxSteps: true,
+		MapWidth:                  len(d.dmap),
+		MapHeight:                 len(d.dmap[0]),
+	}
+}
+
+func (d *dungeon) initForDebug(unused [][]roomgrowinggenerator.Tile) {
 	const testMapSize = 24
-	generatedMap = make([][]roomgrowinggenerator.Tile, testMapSize)
+	generatedMap := make([][]roomgrowinggenerator.Tile, testMapSize)
 	for x := range generatedMap {
 		generatedMap[x] = make([]roomgrowinggenerator.Tile, testMapSize)
 	}
@@ -30,8 +60,7 @@ func (d *dungeon) init(generatedMap [][]roomgrowinggenerator.Tile) {
 	}
 	player.x, player.y = d.getEntrypointCoords()
 	d.addPawnAt(player, player.x, player.y)
-	totalMobs := len(generatedMap) * len(generatedMap[0]) / 75
-	totalMobs = 1
+	const totalMobs = 1
 	log.AppendMessagef("Total %d mobs.", totalMobs)
 	for i := 0; i < totalMobs; i++ {
 		rarity := 0

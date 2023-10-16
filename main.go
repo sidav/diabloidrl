@@ -62,7 +62,8 @@ func main() {
 		inv: &inventory{},
 	}
 	player.playerStats.setDefaultStats()
-	dung.init(generatedMap)
+	// dung.init(generatedMap)
+	dung.initForDebug(generatedMap)
 	log.AppendMessage("Init complete")
 	// log.AppendMessage("Dice test: " + random.NewDice(2, 6, 1).GetDescriptionString())
 	game(dung, pc)
