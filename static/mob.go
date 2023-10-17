@@ -79,7 +79,7 @@ var STableMobs = []*MobStats{
 		Attacks: []*AttackSkill{
 			{
 				Pattern:             attackpattern.SimpleAttack{},
-				HitTimePercentage:   100,
+				HitTimePercentage:   50,
 				DamagePercentage:    100,
 				ToHitRollPercentage: 100,
 			},
@@ -88,9 +88,9 @@ var STableMobs = []*MobStats{
 					RadiusFromAttacker: 1,
 					RadiusFromTarget:   1,
 				},
-				HitTimePercentage:   100,
+				HitTimePercentage:   200,
 				DamagePercentage:    100,
-				ToHitRollPercentage: 100,
+				ToHitRollPercentage: 75,
 			},
 		},
 		Evasion:            3,
@@ -113,7 +113,7 @@ var STableMobs = []*MobStats{
 				Pattern: &attackpattern.RoundAttack{
 					Size: 1,
 				},
-				HitTimePercentage:   100,
+				HitTimePercentage:   150,
 				DamagePercentage:    100,
 				ToHitRollPercentage: 100,
 			},
@@ -135,7 +135,7 @@ var STableMobs = []*MobStats{
 		Attacks: []*AttackSkill{
 			{
 				Pattern:             attackpattern.SimpleAttack{},
-				HitTimePercentage:   100,
+				HitTimePercentage:   50,
 				DamagePercentage:    100,
 				ToHitRollPercentage: 100,
 			},
@@ -144,7 +144,7 @@ var STableMobs = []*MobStats{
 					Size:   1,
 					Length: 5,
 				},
-				HitTimePercentage:   100,
+				HitTimePercentage:   150,
 				DamagePercentage:    100,
 				ToHitRollPercentage: 100,
 			},
@@ -162,7 +162,7 @@ var STableMobs = []*MobStats{
 		weightForSelection: 4,
 	},
 	{
-		Name: "Giant",
+		Name: "Giant Swordsman",
 		AsciiPic: []string{
 			" o ",
 			"\\=0",
@@ -179,28 +179,50 @@ var STableMobs = []*MobStats{
 				ToHitRollPercentage: 100,
 			},
 			{
-				Pattern: &attackpattern.LineAttack{
-					Size:   3,
-					Length: 6,
+				Pattern: &attackpattern.SweepAttack{
+					RadiusFromAttacker: 3,
+					RadiusFromTarget:   4,
 				},
-				HitTimePercentage:   100,
+				HitTimePercentage:   200,
+				DamagePercentage:    100,
+				ToHitRollPercentage: 100,
+			},
+		},
+		Evasion:            2,
+		Damage:             *random.NewDice(1, 4, 0),
+		CritChancePercent:  1,
+		CritDamagePercent:  150,
+		MovementTime:       10,
+		HitTime:            25,
+		RegenCooldown:      50,
+		GivesExperience:    2,
+		weightForSelection: 1,
+	},
+	{
+		Name: "Giant Pikeman",
+		AsciiPic: []string{
+			"^o ",
+			"|=0",
+			"/ \\",
+		},
+		Size:         3,
+		MaxHitpoints: 15,
+		ToHit:        *random.NewDice(1, 6, 0),
+		Attacks: []*AttackSkill{
+			{
+				Pattern: &attackpattern.LineAttack{
+					Size:   2,
+					Length: 5,
+				},
+				HitTimePercentage:   150,
 				DamagePercentage:    100,
 				ToHitRollPercentage: 100,
 			},
 			{
 				Pattern: &attackpattern.RoundAttack{
-					Size: 3,
+					Size: 2,
 				},
-				HitTimePercentage:   100,
-				DamagePercentage:    100,
-				ToHitRollPercentage: 100,
-			},
-			{
-				Pattern: &attackpattern.SweepAttack{
-					RadiusFromAttacker: 3,
-					RadiusFromTarget:   4,
-				},
-				HitTimePercentage:   100,
+				HitTimePercentage:   200,
 				DamagePercentage:    100,
 				ToHitRollPercentage: 100,
 			},

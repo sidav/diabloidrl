@@ -1,6 +1,7 @@
 package main
 
 import (
+	"diabloidrl/lib/calculations"
 	"diabloidrl/static"
 	"strconv"
 )
@@ -31,8 +32,8 @@ func (pa *PawnAction) set(code, delBefore, delAfter, vx, vy int) {
 func (pa *PawnAction) setAttack(attacker *pawn, adata *static.AttackSkill, delBefore, delAfter int, targetPawn *pawn) {
 	pa.code = pActionAttack
 	pa.attackData = adata
-	pa.ticksBeforeAction = delBefore
-	pa.ticksAfterAction = delAfter
+	pa.ticksBeforeAction = calculations.IntPercentage(delBefore, adata.HitTimePercentage)
+	pa.ticksAfterAction = calculations.IntPercentage(delAfter, adata.HitTimePercentage)
 	pa.x, pa.y = pa.attackData.Pattern.GetAimAt(attacker, targetPawn)
 	log.AppendMessagef("ATTACK SELECTED: %d, %d; at %+v", pa.x, pa.y, pa.attackData.Pattern)
 	pa.wasDone = false

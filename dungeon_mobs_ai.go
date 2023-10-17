@@ -19,7 +19,8 @@ func (d *dungeon) aiActForPawn(p *pawn) {
 	case mobStateIdle:
 		return
 	case mobStateAttacking:
-		if d.arePawnsTouching(p, player) || rnd.Rand(3) != 0 {
+
+		if d.isPawnInPlayerFov(p) && (d.arePawnsTouching(p, player) || rnd.Rand(3) != 0) {
 			selectedAttack := d.selectMobAttackWhichLands(p)
 			if selectedAttack != nil {
 				p.action.setAttack(p, selectedAttack, p.getHitTime(), 0, player)
