@@ -14,13 +14,6 @@ func SetDegreesInCircleAmount(degs int) {
 	degreesInCircleFloat = float64(degs)
 }
 
-func intAbs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
 func maxInt(args ...int) int {
 	currMax := 0
 	for i, arg := range args {
@@ -60,6 +53,10 @@ func SquareDistanceFloat64(x1, y1, x2, y2 float64) float64 {
 
 func SquareDistanceInt(x1, y1, x2, y2 int) int {
 	return (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)
+}
+
+func TaxicabDistance(x1, y1, x2, y2 int) int {
+	return max(abs(x2-x1), abs(y2-y1))
 }
 
 func CirclesOverlap(x1, y1, r1, x2, y2, r2 int) bool {
