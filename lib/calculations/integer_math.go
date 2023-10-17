@@ -20,3 +20,14 @@ func min(a, b int) int {
 	}
 	return b
 }
+
+func IntDivideRounding(dividing, divisor int) int {
+	if dividing < 0 || divisor < 0 {
+		panic("This works only on positives")
+	}
+	return (dividing + divisor/2) / divisor
+}
+
+func IntPercentage(whole, percent int) int {
+	return IntDivideRounding(percent*whole, 100)
+}
