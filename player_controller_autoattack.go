@@ -35,6 +35,10 @@ func (pc *playerController) doAutoAttackTurn(dung *dungeon) {
 }
 
 func (pc *playerController) getAttackPattern() *static.AttackSkill {
+	wpn := player.inv.getItemInSlot(invSlotWeapon)
+	if wpn != nil {
+		return &wpn.asWeapon.AttackSkills[0]
+	}
 	return &static.AttackSkill{
 		Pattern:             attackpattern.SimpleAttack{},
 		HitTimePercentage:   100,

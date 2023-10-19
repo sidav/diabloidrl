@@ -2,14 +2,16 @@ package static
 
 import (
 	"diabloidrl/lib/random"
+	attackpattern "diabloidrl/static/attack_pattern"
 	"fmt"
 )
 
 type WeaponStats struct {
-	Name       string
-	ToHitDice  random.Dice
-	DamageDice random.Dice
-	Delay      int
+	Name         string
+	ToHitDice    random.Dice
+	DamageDice   random.Dice
+	Delay        int
+	AttackSkills []AttackSkill
 	// Ranged     bool
 	Range             int // 0 for melee
 	Rarity            int
@@ -105,6 +107,14 @@ var sTableWeapons = []*WeaponStats{
 		DamageDice:         *random.NewDice(2, 3, 0),
 		Delay:              10,
 		weightForSelection: 10,
+		AttackSkills: []AttackSkill{
+			{
+				Pattern:             attackpattern.SimpleAttack{},
+				HitTimePercentage:   100,
+				DamagePercentage:    100,
+				ToHitRollPercentage: 100,
+			},
+		},
 	},
 	{
 		Name:               "Short Blade",
@@ -112,6 +122,14 @@ var sTableWeapons = []*WeaponStats{
 		DamageDice:         *random.NewDice(2, 6, 0),
 		Delay:              12,
 		weightForSelection: 4,
+		AttackSkills: []AttackSkill{
+			{
+				Pattern:             attackpattern.SimpleAttack{},
+				HitTimePercentage:   100,
+				DamagePercentage:    100,
+				ToHitRollPercentage: 100,
+			},
+		},
 	},
 	{
 		Name:               "Rapier",
@@ -119,6 +137,14 @@ var sTableWeapons = []*WeaponStats{
 		DamageDice:         *random.NewDice(3, 6, 0),
 		Delay:              20,
 		weightForSelection: 1,
+		AttackSkills: []AttackSkill{
+			{
+				Pattern:             attackpattern.SimpleAttack{},
+				HitTimePercentage:   100,
+				DamagePercentage:    100,
+				ToHitRollPercentage: 100,
+			},
+		},
 	},
 	{
 		Name:               "Crossbow",
@@ -127,6 +153,17 @@ var sTableWeapons = []*WeaponStats{
 		Delay:              25,
 		weightForSelection: 1,
 		Range:              4,
+		AttackSkills: []AttackSkill{
+			{
+				Pattern: &attackpattern.LineAttack{
+					Size:   1,
+					Length: 4,
+				},
+				HitTimePercentage:   100,
+				DamagePercentage:    100,
+				ToHitRollPercentage: 100,
+			},
+		},
 	},
 	{
 		Name:               "Revolver",
@@ -135,5 +172,16 @@ var sTableWeapons = []*WeaponStats{
 		Delay:              15,
 		weightForSelection: 1,
 		Range:              3,
+		AttackSkills: []AttackSkill{
+			{
+				Pattern: &attackpattern.LineAttack{
+					Size:   1,
+					Length: 5,
+				},
+				HitTimePercentage:   100,
+				DamagePercentage:    100,
+				ToHitRollPercentage: 100,
+			},
+		},
 	},
 }
