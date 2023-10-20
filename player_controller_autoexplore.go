@@ -8,6 +8,11 @@ func (pc *playerController) autoexploreMode(dung *dungeon) {
 	if dung.currentTick%50 == 0 {
 		renderer.renderGameMainScreen(dung)
 	}
+	if player.stamina < player.getMaxStamina() {
+		log.AppendMessage("Resting...")
+		player.action.set(pActionWait, 0, 10, 0, 0)
+		return
+	}
 	vx, vy := pc.getNextAutoexploreStep(dung)
 	if vx == 0 && vy == 0 {
 		log.AppendMessage("Auto-explore finished.")

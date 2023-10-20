@@ -17,6 +17,10 @@ func (d *dungeon) performHitOnCoords(attacker *pawn, hitX, hitY int, beginningOf
 	}
 	toHitRoll := attacker.getHitDice().Roll(rnd)
 	toEvadeRoll := rnd.Rand(defender.getEvasion())
+	if defender.stamina == 0 {
+		toEvadeRoll = 0
+		log.AppendMessagef("%s: not enough stamina to dodge!", defender.getName())
+	}
 	// log.AppendMessagef("To-hit %d <-> EV %d", toHitRoll, toEvadeRoll)
 	if toHitRoll < toEvadeRoll {
 		log.AppendMessagef("%s evaded the attack!", defender.getName())

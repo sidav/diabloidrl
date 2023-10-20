@@ -122,9 +122,6 @@ func (p *pawn) getArmorClass() int {
 }
 
 func (p *pawn) getEvasion() int {
-	if p.stamina == 0 {
-		return 0
-	}
 	ev := 0
 	if p.isPlayer() {
 		ev = 6

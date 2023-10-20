@@ -28,5 +28,5 @@ func (p *playerStruct) getStatsMaxStm() int {
 }
 
 func (p *playerStruct) getStatsMovementTime() int {
-	return 10 - p.rpgStats[rpgStatDex]/7
+	return 11 - p.rpgStats[rpgStatDex]/7
 }

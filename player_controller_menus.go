@@ -42,7 +42,10 @@ func (pc *playerController) showPlayerStats() {
 
 func (pc *playerController) callLevelUpMenu() {
 	menu := tcell_console_wrapper.DescriptionHeavySelectMenu{Title: "Level up a stat"}
-	menu.AddMenuItem("Strength    ", []string{fmt.Sprintf("Current: %d", player.playerStats.rpgStats[rpgStatStr])})
+	menu.AddMenuItem("Strength    ", []string{
+		fmt.Sprintf("Current: %d", player.playerStats.rpgStats[rpgStatStr]),
+		"Useless for now"},
+	)
 	menu.AddMenuItem("Vigor       ", []string{
 		fmt.Sprintf("Current: %d", player.playerStats.rpgStats[rpgStatVgr]),
 		fmt.Sprintf(" Max stamina: %d", player.getMaxStamina())},
@@ -51,7 +54,10 @@ func (pc *playerController) callLevelUpMenu() {
 		fmt.Sprintf("Current: %d", player.playerStats.rpgStats[rpgStatDex]),
 		fmt.Sprintf(" Movement time: %d", player.getMovementTime())},
 	)
-	menu.AddMenuItem("Intelligence", []string{fmt.Sprintf("Current: %d", player.playerStats.rpgStats[rpgStatInt])})
+	menu.AddMenuItem("Intelligence", []string{
+		fmt.Sprintf("Current: %d", player.playerStats.rpgStats[rpgStatInt]),
+		"Useless for now"},
+	)
 	menu.AddMenuItem("Vitality    ", []string{
 		fmt.Sprintf("Current: %d", player.playerStats.rpgStats[rpgStatVit]),
 		fmt.Sprintf("Max HP: %d", player.getMaxHitpoints()),
