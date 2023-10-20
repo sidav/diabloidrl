@@ -9,13 +9,14 @@ import (
 
 func (d *dungeon) init(generatedMap [][]roomgrowinggenerator.Tile) {
 	d.initFromCharMap(generatedMap)
-	for i := 0; i < 3; i++ {
+	totalChests := len(generatedMap) * len(generatedMap[0]) / 1500
+	for i := 0; i < totalChests; i++ {
 		d.placeChestAtRandom()
 	}
 	player.x, player.y = d.getEntrypointCoords()
 	d.addPawnAt(player, player.x, player.y)
-	totalMobs := len(generatedMap) * len(generatedMap[0]) / 75
-	log.AppendMessagef("Total %d mobs.", totalMobs)
+	totalMobs := len(generatedMap) * len(generatedMap[0]) / 100
+	log.AppendMessagef("Total %d mobs and %d chests.", totalMobs, totalChests)
 	for i := 0; i < totalMobs; i++ {
 		rarity := 0
 		if i < totalMobs/6 {
