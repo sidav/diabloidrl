@@ -1,17 +1,23 @@
 package main
 
+import intmath "diabloidrl/lib/calculations/int_math"
+
 func (d *dungeon) executePawnAction(p *pawn) {
+	spentStamina := 0
 	switch p.action.code {
 	case pActionWait:
 		// do nothing
 	case pActionAttack:
 		d.performAttackAction(p)
+		spentStamina = 2
 	case pActionMove:
 		d.performMoveActionWithPawn(p)
+		spentStamina = 1
 	default:
 		panic("executePawnAction(p *pawn): No such action...")
 	}
 	p.action.markExecuted()
+	p.stamina = intmath.Max(0, p.stamina-spentStamina)
 	if p.action.isEmpty() {
 		p.action.reset()
 	}

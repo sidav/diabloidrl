@@ -14,14 +14,14 @@ func IntAbs(x int) int {
 	return x
 }
 
-func MaxInt(a, b int) int {
+func Max(a, b int) int {
 	if a > b {
 		return a
 	}
 	return b
 }
 
-func MinInt(a, b int) int {
+func Min(a, b int) int {
 	if a < b {
 		return a
 	}

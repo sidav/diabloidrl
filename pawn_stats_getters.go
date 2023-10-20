@@ -28,6 +28,19 @@ func (p *pawn) getMaxHitpoints() int {
 	return maxHp
 }
 
+func (p *pawn) getMaxStamina() int {
+	maxStm := 0
+	if p.isPlayer() {
+		maxStm += p.playerStats.getStatsMaxStm()
+	} else {
+		maxStm += 1000 // p.mob.stats.MaxHitpoints
+	}
+	if p.inv != nil {
+		// maxStm += p.inv.getSumOfEgoValuesOfEquippedItems(static.EgoCodeAdditionalMaxHP)
+	}
+	return maxStm
+}
+
 func (p *pawn) getRegenCooldown() int {
 	regenPeriod := 0
 	if p.isPlayer() {
@@ -109,6 +122,9 @@ func (p *pawn) getArmorClass() int {
 }
 
 func (p *pawn) getEvasion() int {
+	if p.stamina == 0 {
+		return 0
+	}
 	ev := 0
 	if p.isPlayer() {
 		ev = 6
@@ -126,15 +142,15 @@ func (p *pawn) getEvasion() int {
 	return ev
 }
 
-func (p *pawn) getAttackRange() int {
-	if p.inv != nil && p.inv.getItemInSlot(invSlotWeapon) != nil {
-		return p.inv.getItemInSlot(invSlotWeapon).asWeapon.Range
-	}
-	if p.isPlayer() {
-		return 0
-	}
-	return p.mob.stats.AttackRange
-}
+// func (p *pawn) getAttackRange() int {
+// 	if p.inv != nil && p.inv.getItemInSlot(invSlotWeapon) != nil {
+// 		return p.inv.getItemInSlot(invSlotWeapon).asWeapon.Range
+// 	}
+// 	if p.isPlayer() {
+// 		return 0
+// 	}
+// 	return p.mob.stats.AttackRange
+// }
 
 func (p *pawn) getMaxFlaskCharges() int {
 	if p.inv.getItemInSlot(invSlotFlask) != nil {

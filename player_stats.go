@@ -2,6 +2,7 @@ package main
 
 const (
 	rpgStatStr uint8 = iota
+	rpgStatVgr
 	rpgStatDex
 	rpgStatInt
 	rpgStatVit
@@ -10,15 +11,20 @@ const (
 
 func (p *playerStruct) setDefaultStats() {
 	p.rpgStats = [rpgStatsCount]int{
-		5,
-		5,
-		5,
-		5,
+		10,
+		10,
+		10,
+		10,
+		10,
 	}
 }
 
 func (p *playerStruct) getStatsMaxHp() int {
-	return 4 + p.getExperienceLevel() + p.rpgStats[rpgStatVit]
+	return p.rpgStats[rpgStatVit] + 10
+}
+
+func (p *playerStruct) getStatsMaxStm() int {
+	return 5 + p.rpgStats[rpgStatVgr]/2
 }
 
 func (p *playerStruct) getStatsMovementTime() int {

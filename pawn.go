@@ -1,8 +1,13 @@
 package main
 
+import (
+	intmath "diabloidrl/lib/calculations/int_math"
+)
+
 type pawn struct {
 	x, y          int
 	hitpoints     int
+	stamina       int
 	mob           *mobStruct
 	playerStats   *playerStruct
 	inv           *inventory
@@ -26,6 +31,10 @@ func (p *pawn) regainHitpoints(hp int) {
 	if p.hitpoints > p.getMaxHitpoints() {
 		p.hitpoints = p.getMaxHitpoints()
 	}
+}
+
+func (p *pawn) regainStamina(stm int) {
+	p.stamina = intmath.Min(p.getMaxStamina(), p.stamina+stm)
 }
 
 func (p *pawn) acquireExperience(exp int) {

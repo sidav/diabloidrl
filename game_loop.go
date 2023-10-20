@@ -28,6 +28,9 @@ func game(d *dungeon, pc *playerController) {
 			if !p.isPlayer() && p.action.isEmpty() {
 				d.aiActForPawn(p)
 			}
+			if d.currentTick%ticksInTurn == 0 && (p.action.code != pActionAttack || p.action.isEmpty()) {
+				p.regainStamina(1)
+			}
 		}
 		d.clearDeadPawns()
 		d.currentTick++

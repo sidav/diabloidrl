@@ -6,6 +6,7 @@ import (
 
 func (d *dungeon) addPawnAt(p *pawn, x, y int) {
 	p.hitpoints = p.getMaxHitpoints()
+	p.stamina = p.getMaxStamina()
 	p.x, p.y = x, y
 	d.pawns = append(d.pawns, p)
 }
