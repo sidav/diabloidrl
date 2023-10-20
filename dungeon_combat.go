@@ -6,7 +6,9 @@ import (
 
 func (d *dungeon) performHitOnCoords(attacker *pawn, hitX, hitY int, beginningOfAnimation bool) {
 	renderer.addAnimationAt(animTypePawnIsActing, attacker.x, attacker.y, !beginningOfAnimation)
-	renderer.addAnimationAt(animTypeHit, hitX, hitY, true)
+	if d.getTileAt(hitX, hitY).isWalkable() {
+		renderer.addAnimationAt(animTypeHit, hitX, hitY, true)
+	}
 	defender := d.getPawnAt(hitX, hitY)
 	if defender == nil {
 		return

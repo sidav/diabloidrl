@@ -10,12 +10,12 @@ import (
 )
 
 type rendererStruct struct {
-	view           util.Viewport
-	dung           *dungeon
-	uiH            int
-	currentFrame   int
-	animations     []*animation
-	attackedCoords [][2]int
+	view                  util.Viewport
+	dung                  *dungeon
+	uiH                   int
+	currentFrame          int
+	animations            []*animation
+	attackedCoordsAndTime [][3]int
 }
 
 func (r *rendererStruct) attachToDungeonStruct(dung *dungeon) {
@@ -76,24 +76,43 @@ func (r *rendererStruct) renderGameMainScreen(dung *dungeon) {
 
 func (r *rendererStruct) updateAttackedTiles() {
 	// clear
-	r.attackedCoords = nil
+	r.attackedCoordsAndTime = nil
 	for _, p := range r.dung.pawns {
 		if !p.action.isEmpty() && p.action.code == pActionAttack {
 			attackedTiles := p.action.attackData.Pattern.GetAttackedCoords(p, p.action.x, p.action.y)
 			for i := range attackedTiles {
-				r.attackedCoords = append(r.attackedCoords, [2]int{attackedTiles[i][0], attackedTiles[i][1]})
+				if r.dung.isInBounds(attackedTiles[i][0], attackedTiles[i][1]) &&
+					r.dung.getTileAt(attackedTiles[i][0], attackedTiles[i][1]).isWalkable() {
+
+					r.attackedCoordsAndTime = append(r.attackedCoordsAndTime,
+						[3]int{
+							attackedTiles[i][0], attackedTiles[i][1], p.action.ticksBeforeAction,
+						})
+				}
 			}
 		}
 	}
 }
 
-func (r *rendererStruct) areCoordsAttacked(x, y int) bool {
-	for i := range r.attackedCoords {
-		if r.attackedCoords[i][0] == x && r.attackedCoords[i][1] == y {
-			return true
+func (r *rendererStruct) ticksBeforeCoordsHit(x, y int) int {
+	min := -1
+	for i := range r.attackedCoordsAndTime {
+		if r.attackedCoordsAndTime[i][0] == x && r.attackedCoordsAndTime[i][1] == y {
+			if min == -1 || min > r.attackedCoordsAndTime[i][2] {
+				min = r.attackedCoordsAndTime[i][2]
+			}
 		}
 	}
-	return false
+	return min
+}
+
+func (r *rendererStruct) setBackgroundForTileBeingHit(x, y int, fg tcell.Color) {
+	tba := r.ticksBeforeCoordsHit(x, y)
+	if tba > 10 {
+		cw.SetStyle(fg, tcell.ColorYellow)
+	} else if tba >= 0 {
+		cw.SetStyle(fg, tcell.ColorDarkRed)
+	}
 }
 
 func (r *rendererStruct) drawMap(dung *dungeon) {
@@ -139,7 +158,7 @@ func (r *rendererStruct) drawTile(dung *dungeon, x, y int) {
 		}
 	}
 	// gore
-	if dung.dmap[realX][realY].isBloody {
+	if dung.dmap[realX][realY].isBloody && dung.dmap[realX][realY].isWalkable() {
 		color = tcell.ColorDarkRed
 	}
 	if dung.dmap[realX][realY].code == tileFloor && dung.dmap[realX][realY].hasGibs {
@@ -153,11 +172,8 @@ func (r *rendererStruct) drawTile(dung *dungeon, x, y int) {
 	if inverse || t.wasOnPlayerPath {
 		cw.InverseStyle()
 	}
-	if r.areCoordsAttacked(realX, realY) {
-		cw.SetStyle(color, tcell.ColorDarkRed)
-	}
+	r.setBackgroundForTileBeingHit(realX, realY, color)
 	cw.PutChar(chr, x, y)
-
 }
 
 // func (r *renderer) renderPlayer() {
@@ -170,10 +186,8 @@ func (r *rendererStruct) renderPawn(d *dungeon, p *pawn, inverse bool) {
 	if d.isPawnInPlayerFov(p) && r.view.AreRealCoordsInViewport(p.x, p.y) {
 		if p.isPlayer() {
 			cw.SetStyle(tcell.ColorWhite, tcell.ColorBlack)
-			if r.areCoordsAttacked(p.x, p.y) {
-				cw.SetStyle(tcell.ColorBlack, tcell.ColorDarkRed)
-			}
 			x, y := r.view.RealCoordsToScreenCoords(p.x, p.y)
+			r.setBackgroundForTileBeingHit(p.x, p.y, tcell.ColorBlack)
 			cw.PutChar('@', x, y)
 		} else {
 			switch p.mob.stats.Rarity {
@@ -190,6 +204,7 @@ func (r *rendererStruct) renderPawn(d *dungeon, p *pawn, inverse bool) {
 			}
 			for i := range p.mob.stats.AsciiPic {
 				for j := range p.mob.stats.AsciiPic[i] {
+					r.setBackgroundForTileBeingHit(p.x+i, p.y+j, tcell.ColorBlack)
 					chr := rune(p.mob.stats.AsciiPic[i][j])
 					cw.PutChar(chr, x+j, y+i)
 					// cw.PutChar(chr, x+j-p.mob.stats.Size/2, y+i-p.mob.stats.Size/2)
