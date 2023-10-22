@@ -132,14 +132,35 @@ var sTableWeapons = []*WeaponStats{
 		},
 	},
 	{
-		Name:               "Rapier",
+		Name:               "Spear",
 		ToHitDice:          *random.NewDice(2, 3, 0),
-		DamageDice:         *random.NewDice(3, 6, 0),
+		DamageDice:         *random.NewDice(1, 6, 0),
 		Delay:              20,
 		weightForSelection: 1,
 		AttackSkills: []AttackSkill{
 			{
-				Pattern:             attackpattern.SimpleAttack{},
+				Pattern: &attackpattern.LineAttack{
+					Size:   1,
+					Length: 2,
+				},
+				HitTimePercentage:   100,
+				DamagePercentage:    100,
+				ToHitRollPercentage: 100,
+			},
+		},
+	},
+	{
+		Name:               "Axe",
+		ToHitDice:          *random.NewDice(2, 3, 0),
+		DamageDice:         *random.NewDice(2, 3, 0),
+		Delay:              20,
+		weightForSelection: 1,
+		AttackSkills: []AttackSkill{
+			{
+				Pattern: &attackpattern.SweepAttack{
+					RadiusFromAttacker: 1,
+					RadiusFromTarget:   1,
+				},
 				HitTimePercentage:   100,
 				DamagePercentage:    100,
 				ToHitRollPercentage: 100,
