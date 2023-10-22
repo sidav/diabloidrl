@@ -5,14 +5,8 @@ import (
 	"fmt"
 )
 
-const (
-	ArmorSlotHead uint8 = iota
-	ArmorSlotBody
-)
-
 type ArmorStats struct {
 	Name            string
-	Slot            uint8
 	Defense         int
 	EvasionModifier int
 	Rarity          int
@@ -103,36 +97,13 @@ func getRandomArmorStats(rnd random.PRNG) *ArmorStats {
 
 var sTableArmors = []*ArmorStats{
 	{
-		Name:               "Cap",
-		Slot:               ArmorSlotHead,
-		Defense:            1,
-		EvasionModifier:    0,
-		weightForSelection: 1,
-	},
-	{
-		Name:               "Helmet",
-		Slot:               ArmorSlotHead,
-		Defense:            2,
-		EvasionModifier:    -1,
-		weightForSelection: 1,
-	},
-	{
-		Name:               "Hood",
-		Slot:               ArmorSlotHead,
-		Defense:            0,
-		EvasionModifier:    1,
-		weightForSelection: 1,
-	},
-	{
 		Name:               "Robe",
-		Slot:               ArmorSlotBody,
 		Defense:            1,
 		EvasionModifier:    1,
 		weightForSelection: 1,
 	},
 	{
 		Name:               "Leather armor",
-		Slot:               ArmorSlotBody,
 		Defense:            3,
 		EvasionModifier:    -2,
 		weightForSelection: 1,

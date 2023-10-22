@@ -115,9 +115,6 @@ func (p *pawn) getArmorClass() int {
 	if p.inv.getItemInSlot(invSlotBody) != nil {
 		armorClass += p.inv.getItemInSlot(invSlotBody).asArmor.Defense
 	}
-	if p.inv.getItemInSlot(invSlotHelmet) != nil {
-		armorClass += p.inv.getItemInSlot(invSlotHelmet).asArmor.Defense
-	}
 	return armorClass
 }
 
@@ -131,9 +128,6 @@ func (p *pawn) getEvasion() int {
 	if p.inv != nil {
 		if p.inv.getItemInSlot(invSlotBody) != nil {
 			ev += p.inv.getItemInSlot(invSlotBody).asArmor.EvasionModifier
-		}
-		if p.inv.getItemInSlot(invSlotHelmet) != nil {
-			ev += p.inv.getItemInSlot(invSlotHelmet).asArmor.EvasionModifier
 		}
 	}
 	return ev

@@ -7,8 +7,8 @@ import (
 
 const (
 	invSlotWeapon uint8 = iota
+	invSlotOffhand
 	invSlotBody
-	invSlotHelmet
 	invSlotAmulet
 	invSlotFlask
 	invSlotsTotal

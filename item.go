@@ -10,6 +10,7 @@ type item struct {
 	x, y     int
 	asWeapon *static.WeaponStats
 	asArmor  *static.ArmorStats
+	asShield *static.ShieldStats
 	asAmulet *static.AmuletStats
 	asFlask  *static.FlaskStats
 }
@@ -26,6 +27,10 @@ func (i *item) isAmulet() bool {
 	return i.asAmulet != nil
 }
 
+func (i *item) isShield() bool {
+	return i.asShield != nil
+}
+
 func (i *item) isFlask() bool {
 	return i.asFlask != nil
 }
@@ -39,6 +44,9 @@ func (i *item) getRarity() int {
 	}
 	if i.isAmulet() {
 		return i.asAmulet.Rarity
+	}
+	if i.isShield() {
+		return i.asShield.Rarity
 	}
 	if i.isFlask() {
 		return i.asFlask.Rarity
@@ -54,10 +62,10 @@ func (i *item) getAscii() rune {
 		return '('
 	}
 	if i.isArmor() {
-		if i.asArmor.Slot == static.ArmorSlotHead {
-			return '^'
-		}
 		return '['
+	}
+	if i.isShield() {
+		return '0'
 	}
 	if i.isAmulet() {
 		return '"'
@@ -72,6 +80,9 @@ func (i *item) initAsRandomItem(minRarity int) {
 	itemGenerators := []func(){
 		func() {
 			i.asWeapon = static.GenerateRandomWeaponStats(minRarity)
+		},
+		func() {
+			i.asShield = static.GenerateRandomShieldStats(minRarity)
 		},
 		func() {
 			i.asArmor = static.GenerateRandomArmorStats(minRarity)
@@ -94,6 +105,9 @@ func (i *item) getName() string {
 func (i *item) getStatic() static.ItemStatsInterface {
 	if i.isWeapon() {
 		return i.asWeapon
+	}
+	if i.isShield() {
+		return i.asShield
 	}
 	if i.isArmor() {
 		return i.asArmor

@@ -7,8 +7,9 @@ type affixAdder struct {
 	affixName                        string // for escaping "item of X of Y" case (for suffixes only)
 	incompatibleWithAffixOfAdjective string // I couldn't figure out a better way for this :(
 	// for armor:
-	armorFunc          func(*ArmorStats)
-	bodyOnly, headOnly bool
+	armorFunc func(*ArmorStats)
+	// for shields:
+	shieldFunc func(*ShieldStats)
 	// for weapons:
 	weaponFunc            func(*WeaponStats)
 	meleeOnly, rangedOnly bool

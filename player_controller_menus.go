@@ -2,7 +2,6 @@ package main
 
 import (
 	"diabloidrl/lib/tcell_console_wrapper"
-	"diabloidrl/static"
 	"fmt"
 
 	"github.com/gdamore/tcell/v2"
@@ -76,8 +75,8 @@ func (pc *playerController) callInventoryMenu() {
 	menu := tcell_console_wrapper.DescriptionHeavySelectMenu{Title: "Inventory"}
 	menu.AddMenuItem("See the backpack", []string{fmt.Sprintf("%d items inside", len(player.inv.stash)), ""})
 	menu.AddMenuItem("Weapon", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotWeapon), true))
+	menu.AddMenuItem("Offhand", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotOffhand), true))
 	menu.AddMenuItem("Body armor", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotBody), true))
-	menu.AddMenuItem("Helmet", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotHelmet), true))
 	menu.AddMenuItem("Amulet", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotAmulet), true))
 	menu.AddMenuItem("Flask", pc.getItemDescriptionsArrayForInv(player.inv.getItemInSlot(invSlotFlask), true))
 	selected := menu.Call(cw)
@@ -89,9 +88,9 @@ func (pc *playerController) callInventoryMenu() {
 	case 1:
 		pc.callChangeItemMenu(invSlotWeapon)
 	case 2:
-		pc.callChangeItemMenu(invSlotBody)
+		pc.callChangeItemMenu(invSlotOffhand)
 	case 3:
-		pc.callChangeItemMenu(invSlotHelmet)
+		pc.callChangeItemMenu(invSlotBody)
 	case 4:
 		pc.callChangeItemMenu(invSlotAmulet)
 	case 5:
@@ -133,12 +132,12 @@ func (pc *playerController) callChangeItemMenu(slot uint8) {
 	case invSlotWeapon:
 		title = "Select weapon to wield"
 		filter = func(i *item) bool { return i.isWeapon() }
+	case invSlotOffhand:
+		title = "Select a shield to wield"
+		filter = func(i *item) bool { return i.isShield() }
 	case invSlotBody:
 		title = "Select armor to wear"
-		filter = func(i *item) bool { return i.isArmor() && i.asArmor.Slot == static.ArmorSlotBody }
-	case invSlotHelmet:
-		title = "Select headpiece to put on"
-		filter = func(i *item) bool { return i.isArmor() && i.asArmor.Slot == static.ArmorSlotHead }
+		filter = func(i *item) bool { return i.isArmor() }
 	case invSlotAmulet:
 		title = "Select amulet to wear"
 		filter = func(i *item) bool { return i.isAmulet() }

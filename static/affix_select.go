@@ -30,10 +30,9 @@ func selectRandomAppropriateAffixFor(stats ItemStatsInterface) *affixAdder {
 				if currAff.armorFunc == nil && currAff.anyFunc == nil {
 					return 0
 				}
-				if currAff.headOnly && stats.(*ArmorStats).Slot != ArmorSlotHead {
-					return 0
-				}
-				if currAff.bodyOnly && stats.(*ArmorStats).Slot != ArmorSlotBody {
+				return 1
+			case *ShieldStats:
+				if currAff.shieldFunc == nil && currAff.anyFunc == nil {
 					return 0
 				}
 				return 1
