@@ -23,7 +23,7 @@ func (d *dungeon) aiActForPawn(p *pawn) {
 		if d.isPawnInPlayerFov(p) && (d.arePawnsTouching(p, player) || rnd.Rand(3) != 0) {
 			selectedAttack := d.selectMobAttackWhichLands(p)
 			if selectedAttack != nil {
-				p.action.setAttack(p, selectedAttack, p.getHitTime(), 0, player)
+				p.setAttack(selectedAttack, p.getHitTime(), 0, player)
 				return
 			}
 		}

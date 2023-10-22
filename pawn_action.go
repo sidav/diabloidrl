@@ -29,14 +29,18 @@ func (pa *PawnAction) set(code, delBefore, delAfter, vx, vy int) {
 	pa.wasDone = false
 }
 
-func (pa *PawnAction) setAttack(attacker *pawn, adata *static.AttackSkill, delBefore, delAfter int, targetPawn *pawn) {
-	pa.code = pActionAttack
-	pa.attackData = adata
-	pa.ticksBeforeAction = calculations.IntPercentage(delBefore, adata.HitTimePercentage)
-	pa.ticksAfterAction = calculations.IntPercentage(delAfter, adata.HitTimePercentage)
-	pa.x, pa.y = pa.attackData.Pattern.GetAimAt(attacker, targetPawn)
-	log.AppendMessagef("ATTACK SELECTED: %d, %d; at %+v", pa.x, pa.y, pa.attackData.Pattern)
-	pa.wasDone = false
+func (attacker *pawn) setAttack(adata *static.AttackSkill, delBefore, delAfter int, targetPawn *pawn) {
+	attacker.action.code = pActionAttack
+	attacker.action.attackData = adata
+	attacker.action.ticksBeforeAction = calculations.IntPercentage(delBefore, adata.HitTimePercentage)
+	attacker.action.ticksAfterAction = calculations.IntPercentage(delAfter, adata.HitTimePercentage)
+	if attacker.stamina < adata.StaminaCost {
+		attacker.action.ticksBeforeAction *= 2
+		attacker.action.ticksAfterAction *= 2
+	}
+	attacker.action.x, attacker.action.y = attacker.action.attackData.Pattern.GetAimAt(attacker, targetPawn)
+	log.AppendMessagef("ATTACK SELECTED: %d, %d; at %+v", attacker.action.x, attacker.action.y, attacker.action.attackData.Pattern)
+	attacker.action.wasDone = false
 }
 
 func (pa *PawnAction) reset() {

@@ -24,7 +24,7 @@ func (pc *playerController) doAutoAttackTurn(dung *dungeon) {
 	}
 
 	if pc.getAttackPattern().Pattern.CanBePerformedOn(player, selectedMob) {
-		player.action.setAttack(player, pc.getAttackPattern(), 0, player.getHitTime(), selectedMob)
+		player.setAttack(pc.getAttackPattern(), 0, player.getHitTime(), selectedMob)
 	} else {
 		vx, vy := dung.getStepForPawnToPawn(player, selectedMob)
 		player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
