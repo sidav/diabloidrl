@@ -1,5 +1,10 @@
 package main
 
+import (
+	"diabloidrl/static"
+	attackpattern "diabloidrl/static/attack_pattern"
+)
+
 const (
 	pcModeDefault uint8 = iota
 	pcModeAutoexplore
@@ -119,5 +124,19 @@ func (pc *playerController) keyToStep(k string) (int, int) {
 		return 1, 1
 	default:
 		return 0, 0
+	}
+}
+
+func (pc *playerController) getAttackPattern() *static.AttackSkill {
+	wpn := player.inv.getItemInSlot(invSlotWeapon)
+	if wpn != nil {
+		return &wpn.asWeapon.AttackSkills[0]
+	}
+	return &static.AttackSkill{
+		Pattern:             attackpattern.SimpleAttack{},
+		StaminaCost:         1,
+		HitTimePercentage:   100,
+		DamagePercentage:    100,
+		ToHitRollPercentage: 100,
 	}
 }

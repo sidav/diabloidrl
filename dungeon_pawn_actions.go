@@ -9,7 +9,7 @@ func (d *dungeon) executePawnAction(p *pawn) {
 		// do nothing
 	case pActionAttack:
 		d.performAttackAction(p)
-		spentStamina = 2
+		spentStamina = p.action.attackData.StaminaCost
 	case pActionMove:
 		d.performMoveActionWithPawn(p)
 		spentStamina = 1

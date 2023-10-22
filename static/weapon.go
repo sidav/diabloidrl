@@ -110,6 +110,7 @@ var sTableWeapons = []*WeaponStats{
 		AttackSkills: []AttackSkill{
 			{
 				Pattern:             attackpattern.SimpleAttack{},
+				StaminaCost:         2,
 				HitTimePercentage:   100,
 				DamagePercentage:    100,
 				ToHitRollPercentage: 100,
@@ -120,11 +121,12 @@ var sTableWeapons = []*WeaponStats{
 		Name:               "Short Blade",
 		ToHitDice:          *random.NewDice(2, 3, 0),
 		DamageDice:         *random.NewDice(2, 6, 0),
-		Delay:              12,
+		Delay:              15,
 		weightForSelection: 4,
 		AttackSkills: []AttackSkill{
 			{
 				Pattern:             attackpattern.SimpleAttack{},
+				StaminaCost:         3,
 				HitTimePercentage:   100,
 				DamagePercentage:    100,
 				ToHitRollPercentage: 100,
@@ -143,6 +145,7 @@ var sTableWeapons = []*WeaponStats{
 					Size:   1,
 					Length: 2,
 				},
+				StaminaCost:         4,
 				HitTimePercentage:   100,
 				DamagePercentage:    100,
 				ToHitRollPercentage: 100,
@@ -161,6 +164,7 @@ var sTableWeapons = []*WeaponStats{
 					RadiusFromAttacker: 1,
 					RadiusFromTarget:   1,
 				},
+				StaminaCost:         4,
 				HitTimePercentage:   100,
 				DamagePercentage:    100,
 				ToHitRollPercentage: 100,
@@ -180,29 +184,31 @@ var sTableWeapons = []*WeaponStats{
 					Size:   1,
 					Length: 4,
 				},
+				StaminaCost:         3,
 				HitTimePercentage:   100,
 				DamagePercentage:    100,
 				ToHitRollPercentage: 100,
 			},
 		},
 	},
-	{
-		Name:               "Revolver",
-		ToHitDice:          *random.NewDice(1, 3, 0),
-		DamageDice:         *random.NewDice(1, 3, 0),
-		Delay:              15,
-		weightForSelection: 1,
-		Range:              3,
-		AttackSkills: []AttackSkill{
-			{
-				Pattern: &attackpattern.LineAttack{
-					Size:   1,
-					Length: 5,
-				},
-				HitTimePercentage:   100,
-				DamagePercentage:    100,
-				ToHitRollPercentage: 100,
-			},
-		},
-	},
+	// {
+	// 	Name:               "Revolver",
+	// 	ToHitDice:          *random.NewDice(1, 3, 0),
+	// 	DamageDice:         *random.NewDice(1, 3, 0),
+	// 	Delay:              15,
+	// 	weightForSelection: 1,
+	// 	Range:              3,
+	// 	AttackSkills: []AttackSkill{
+	// 		{
+	// 			Pattern: &attackpattern.LineAttack{
+	// 				Size:   1,
+	// 				Length: 5,
+	// 			},
+	// 			StaminaCost:         3,
+	// 			HitTimePercentage:   100,
+	// 			DamagePercentage:    100,
+	// 			ToHitRollPercentage: 100,
+	// 		},
+	// 	},
+	// },
 }

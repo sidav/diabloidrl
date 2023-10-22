@@ -2,8 +2,6 @@ package main
 
 import (
 	"diabloidrl/lib/calculations"
-	"diabloidrl/static"
-	attackpattern "diabloidrl/static/attack_pattern"
 	"math"
 )
 
@@ -32,17 +30,4 @@ func (pc *playerController) doAutoAttackTurn(dung *dungeon) {
 		player.action.set(pActionMove, 0, player.getMovementTime(), vx, vy)
 	}
 	// }
-}
-
-func (pc *playerController) getAttackPattern() *static.AttackSkill {
-	wpn := player.inv.getItemInSlot(invSlotWeapon)
-	if wpn != nil {
-		return &wpn.asWeapon.AttackSkills[0]
-	}
-	return &static.AttackSkill{
-		Pattern:             attackpattern.SimpleAttack{},
-		HitTimePercentage:   100,
-		DamagePercentage:    100,
-		ToHitRollPercentage: 100,
-	}
 }
